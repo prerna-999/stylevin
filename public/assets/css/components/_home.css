@@ -1447,9 +1447,10 @@
   }
 }
 
+
 /* ===================== NAV ARROWS ===================== */
 
-.combo-carousel .new-drop__nav {
+.combo-offers-nav {
   position: relative;
   flex: 0 0 auto;
   width: 48px;
@@ -1466,33 +1467,25 @@
   transition: background 0.25s ease, transform 0.2s ease;
 }
 
-.combo-carousel .new-drop__nav:hover {
+.combo-offers-nav:hover {
   background: var(--color-3);
   transform: scale(1.06);
 }
 
-/* .combo-carousel .new-drop__nav--prev {
+.combo-offers-nav--prev {
   margin-right: 18px;
 }
 
-.combo-carousel .new-drop__nav--next {
-  margin-left: 18px;
-} */
-
-.combo-carousel .new-drop__nav--prev {
-  margin-right: 18px;
-}
-
-.combo-carousel .new-drop__nav--prev svg {
+.combo-offers-nav--prev svg {
   transform: rotate(180deg);
 }
 
-.combo-carousel .new-drop__nav--next {
+.combo-offers-nav--next {
   margin-left: 18px;
 }
 
 @media (max-width: 1024px) {
-  .combo-carousel .new-drop__nav {
+  .combo-offers-nav {
     display: none;
   }
 }
@@ -1504,7 +1497,6 @@
   background: var(--bg-white);
   border-radius: 18px;
   overflow: hidden;
-  box-shadow: var(--box-shadow-2);
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -1513,7 +1505,6 @@
 
 .combo-card:hover {
   transform: translateY(-4px);
-  box-shadow: var(--box-shadow);
 }
 
 .combo-badge {

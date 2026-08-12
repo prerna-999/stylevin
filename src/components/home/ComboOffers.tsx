@@ -179,7 +179,7 @@ export default function ComboOffers() {
         <div className="combo-carousel">
           <button
             type="button"
-            className="new-drop__nav new-drop__nav--prev"
+            className="combo-offers-nav combo-offers-nav--prev"
             onClick={() => scrollByCard("left")}
             aria-label="Previous combo"
           >
@@ -248,7 +248,7 @@ export default function ComboOffers() {
 
           <button
             type="button"
-            className="new-drop__nav new-drop__nav--next"
+            className="combo-offers-nav combo-offers-nav--next"
             onClick={() => scrollByCard("right")}
             aria-label="Next combo"
           >
