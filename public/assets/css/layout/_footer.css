@@ -1,0 +1,262 @@
+/* ===== Wave section divider (added on top of footer) ===== */
+.sectionDivider {
+  display: block;
+  width: 100%;
+  line-height: 0;
+  /* the wave shape uses currentColor, so this sets its fill to match the footer bg */
+  color: var(--color-black);
+  background: var(--bg-white);
+}
+
+.sectionDivider__waves {
+  position: relative;
+  width: 100%;
+  height: 60px;
+  display: block;
+}
+
+.sectionDivider__parallax1 > use {
+  animation: sectionDividerMove 22s linear infinite;
+  animation-delay: -2s;
+  opacity: 0.35;
+}
+
+.sectionDivider__parallax2 > use {
+  animation: sectionDividerMove 14s linear infinite;
+  animation-delay: -3s;
+  opacity: 0.5;
+}
+
+.sectionDivider__parallax3 > use {
+  animation: sectionDividerMove 10s linear infinite;
+  animation-delay: -4s;
+  opacity: 0.75;
+}
+
+.sectionDivider__parallax4 > use {
+  animation: sectionDividerMove 8s linear infinite;
+  animation-delay: -5s;
+}
+
+@keyframes sectionDividerMove {
+  0% {
+    transform: translate3d(-90px, 0, 0);
+  }
+  100% {
+    transform: translate3d(85px, 0, 0);
+  }
+}
+
+@media (max-width: 767px) {
+  .sectionDivider__waves {
+    height: 36px;
+  }
+}
+
+/* ===== existing footer styles — unchanged ===== */
+.footer {
+  background: var(--color-black);
+  color: var(--text-color);
+  font-family: var(--font-family);
+  padding: 40px 0 0;
+  overflow: hidden;
+}
+
+.footer .heading {
+  color: var(--color-white);
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  margin: 0 0 20px;
+  position: relative;
+  padding-bottom: 12px;
+}
+
+.footer .heading::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100px;
+  height: 2px;
+  background: linear-gradient(90deg, var(--color-1), var(--color-2));
+}
+
+.footer .linkList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.footer .linkList li + li {
+  margin-top: 12px;
+}
+
+.footer .linkList a {
+  color: var(--color-white);
+  font-size: 15px;
+  text-decoration: none;
+  transition: color 0.25s ease, padding-left 0.25s ease;
+}
+
+.footer .linkList a:hover {
+  color: var(--color-2);
+  padding-left: 4px;
+}
+
+.footer .contactList {
+  list-style: none;
+  margin: 0 0 22px;
+  padding: 0;
+}
+
+.footer .contactList li + li {
+  margin-top: 16px;
+}
+
+.footer .contactList a {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  color: var(--color-white);
+  font-size: 15px;
+  line-height: 1.55;
+  text-decoration: none;
+  transition: color 0.25s ease;
+}
+
+.footer .contactList a:hover {
+  color: var(--color-2);
+}
+
+.footer .iconCircle {
+  flex: 0 0 30px;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 1px solid var(--color-1);
+  color: var(--color-1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  margin-top: 1px;
+}
+
+.footer .socialList {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 20px;
+  padding: 0;
+}
+
+.footer .socialLink {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.25s ease, transform 0.25s ease, filter 0.25s ease;
+  background-color: var(--color-white);
+}
+
+.footer .socialLink img {
+  width: 16px;
+  height: 16px;
+  object-fit: contain;
+}
+
+.footer .socialLink:hover {
+  background: linear-gradient(135deg, var(--color-1), var(--color-2));
+  color: var(--color-black);
+  transform: translateY(-2px);
+}
+
+.footer .divider {
+  border: none;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  margin: 48px 0 0;
+}
+
+.footer .bottomBar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 22px 0;
+  font-size: 13.5px;
+  color: var(--color-white);
+}
+
+.footer .bottomBar b {
+  color: var(--color-white);
+  font-weight: 600;
+}
+
+.footer .paymentGroup {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.footer .paymentLabel {
+  color: var(--color-white);
+  font-size: 13.5px;
+  margin-right: 2px;
+  white-space: nowrap;
+}
+
+.footer .paymentBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 26px;
+  padding: 0 8px;
+  border-radius: 4px;
+  background: var(--color-white);
+}
+
+.footer .paymentBadge img {
+  height: 14px;
+  width: auto;
+  object-fit: contain;
+}
+
+.footer .mapWrap {
+  border-radius: 6px;
+  overflow: hidden;
+  line-height: 0;
+  filter: grayscale(0.15);
+}
+
+.footer .mapWrap iframe {
+  border: 0;
+  display: block;
+}
+
+@media (max-width: 991px) {
+  .footer {
+    padding-top: 48px;
+  }
+  .footer .colSpace {
+    margin-top: 36px;
+  }
+}
+
+@media (max-width: 767px) {
+  .footer {
+    padding-top: 40px;
+    text-align: left;
+  }
+  .footer .bottomBar {
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: left;
+  }
+}
