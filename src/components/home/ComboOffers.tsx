@@ -2,19 +2,16 @@
 
 import Image from "next/image";
 import { useCallback, useRef, useState } from "react";
-import { Container } from "react-bootstrap"; // your existing site container
+import { Container } from "react-bootstrap"; 
 
-// ------------------------------------------------------------------
-// 1. CONTENT DATA
-// ------------------------------------------------------------------
 export interface ComboOffer {
   id: number;
   title: string;
   price: string;
   oldPrice?: string;
-  image: string; // Shopify CDN URL
+  image: string;
   alt: string;
-  href: string; // product / buy link
+  href: string; 
 }
 
 const comboOffers: ComboOffer[] = [
@@ -101,11 +98,6 @@ const getDiscount = (price: string, oldPrice?: string) => {
   return Math.round(((o - p) / o) * 100);
 };
 
-// ------------------------------------------------------------------
-// 2. COMPONENT — horizontal scroll-snap carousel, mapped from data above
-//    Desktop: 3 full + peek | Tablet: 2 visible | Mobile: 1 visible
-//    Includes click-and-drag support (same pattern as NewDrop)
-// ------------------------------------------------------------------
 export default function ComboOffers() {
   const trackRef = useRef<HTMLDivElement>(null);
   const [isPressing, setIsPressing] = useState(false);
@@ -125,8 +117,6 @@ export default function ComboOffers() {
     });
   }, []);
 
-  // Click-and-drag support so people can slide the row directly with a
-  // mouse (touch/trackpad already scroll natively via overflow-x: auto).
   const handlePointerDown = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
     const track = trackRef.current;
     if (!track) return;
