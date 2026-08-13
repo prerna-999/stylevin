@@ -20,7 +20,7 @@ const FEATURES: Feature[] = [
     icon: Truck,
     code: "SHIP / 01",
     title: "Free Shipping",
-    sub: "Pan-India, in 3–5 days",
+    sub: "Pan-India, in 6–7 days",
   },
   {
     icon: PackageCheck,

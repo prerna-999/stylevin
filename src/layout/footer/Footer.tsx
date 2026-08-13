@@ -174,7 +174,7 @@ const FooterLayout = () => {
                     support@stylevin.com
                   </a>
                 </li>
-                <li>
+                {/* <li>
                   <a
                     href="https://maps.app.goo.gl/"
                     target="_blank"
@@ -186,7 +186,7 @@ const FooterLayout = () => {
                     TOWER-A, 604, Bestech Business Tower, SAS Nagar, Punjab
                     160062
                   </a>
-                </li>
+                </li> */}
               </ul>
 
               <ul className="socialList">

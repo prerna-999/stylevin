@@ -9,7 +9,6 @@
   overflow: hidden;
 }
 
-/* faint corner glow like the hero photo warmth */
 .promo-section::before {
   content: "";
   position: absolute;
@@ -584,9 +583,6 @@
   font-family: var(--font-family);
 }
  
-/* Top curve — same self-contained technique as the hero's bottom curve:
-   fully inside this section's own box, painted in the previous section's
-   dark color so the seam reads as one continuous wave */
 .new-drop__curve {
   position: absolute;
   left: 0;
