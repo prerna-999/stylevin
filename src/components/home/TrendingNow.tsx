@@ -264,9 +264,6 @@ const TrendingNow: React.FC = () => {
         ))}
       </div>
 
-      {/* Bottom curve: painted in the NEXT section's color (promo-section
-          is var(--primary-color)) so it reads as that dark section
-          rising up in a wave underneath Trending Now's white background. */}
       <div className="trending-now__curve" aria-hidden="true">
         <svg
           className="trending-now__curve-svg"

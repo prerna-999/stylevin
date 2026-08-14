@@ -227,10 +227,6 @@ const HeroHome: React.FC = () => {
           </div>
         </div>
 
-        {/* Bottom curve overlay — inline SVG painted in the color of the
-            section below, so it always renders (no external image to 404)
-            and stays fully inside this component's own box (no clipping
-            issues from a neighboring section's overflow:hidden). */}
         <div className="hero-home__curve" aria-hidden="true">
           <svg
             className="hero-home__curve-svg"

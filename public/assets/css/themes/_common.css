@@ -1,5 +1,5 @@
 :root {
-    --font-family: "Poppins", sans-serif;
+    --font-family: 'Jost', sans-serif;
     --bg-white: #fff;
     --text-color: #6b7385;
     --primary-color: #301311; 
@@ -13,7 +13,7 @@
     --box-shadow-2: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
     --hero-gradient: linear-gradient(135deg,#2F1A0A 0%, #581E0F 100%);
     --glass-bg: rgba(255, 255, 255, 0.85);
-      --page-bg: #f4f5f7;
+    --page-bg: #f4f5f7;
 }
 
 .fs-16px {
@@ -2013,4 +2013,59 @@ body{
   .category-grid {
     grid-template-columns: repeat(2, 1fr);
   }
+}
+
+/* stylebtn */
+.stylebtn {
+  position: relative;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+  background-color: #e5d242;
+  padding: 20px 28px 16px 28px;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  transform: rotate(-2deg);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.stylebtn:hover {
+  transform: rotate(0deg) scale(1.02);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+}
+
+.stylebtn__pin {
+  position: absolute;
+  top: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 14px;
+  height: 14px;
+  background-color: #3b2314;
+  border-radius: 50%;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.stylebtn__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: #3b2314;
+  margin-bottom: 2px;
+}
+
+.stylebtn__arrow {
+  display: inline-flex;
+  align-items: center;
+  transition: transform 0.2s ease;
+}
+
+.stylebtn:hover .stylebtn__arrow {
+  transform: translateX(4px);
 }
