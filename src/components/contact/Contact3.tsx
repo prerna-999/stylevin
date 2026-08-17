@@ -116,7 +116,7 @@ const Contact3: React.FC = () => {
 
           <div className="side-stack">
             <div className="info-tag">
-              <h4>Head Office</h4>
+              <h4>INFO</h4>
               <div className="row">
                 <span className="ico"><FiPhone /></span>
                 <div>
