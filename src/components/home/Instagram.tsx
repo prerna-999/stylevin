@@ -97,7 +97,7 @@ const REELS: ReelSlide[] = [
   },
 ];
 
-const SCROLL_STEP = 372; // card width + gap, in px (kept in sync with instagram.css)
+const SCROLL_STEP = 372;
 
 const Instagram: React.FC = () => {
   const trackRef = useRef<HTMLDivElement | null>(null);

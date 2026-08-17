@@ -2069,3 +2069,22 @@ body{
 .stylebtn:hover .stylebtn__arrow {
   transform: translateX(4px);
 }
+.tags-section {
+  position: relative;
+}
+
+.tags-section-curve {
+  position: absolute !important;
+  bottom: 8%;
+  left: 0;
+  width: 100% !important;
+  height: 80px !important;
+  min-height: 80px;
+  transform: translateY(70%);
+  display: block;
+  z-index: 10;
+}
+
+.faq-item{
+    margin-bottom: 20px !important;
+}

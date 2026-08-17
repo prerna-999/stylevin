@@ -55,7 +55,7 @@ export const NAV_ITEMS: NavItem[] = [
     href: "/page",
     children: [
       { label: "About Us", href: "/about/" },
-      { label: "Contact Us", href: "/page/contact-us" },
+      { label: "Contact Us", href: "/contact/" },
       { label: "FAQs", href: "/page/faqs" },
     ],
   },
