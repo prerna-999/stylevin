@@ -33,7 +33,7 @@ const needHelpLinks: FooterLink[] = [
 const moreInfoLinks: FooterLink[] = [
   { url: '/about/', name: 'About Us' },
   { url: '/blogs/', name: "Blog's" },
-  { url: '/terms-condition/', name: 'Terms' },
+  { url: '/terms-and-condition/', name: 'Terms' },
   { url: '/sitemap/', name: 'Sitemap' },
   { url: '/privacy-policy/', name: 'Privacy Policy' },
   { url: '/shipping-policy/', name: 'Shipping Policy' },

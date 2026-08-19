@@ -52,11 +52,11 @@ export const NAV_ITEMS: NavItem[] = [
   },
   {
     label: "Page",
-    href: "/page",
+    href: "",
     children: [
       { label: "About Us", href: "/about/" },
       { label: "Contact Us", href: "/contact/" },
-      { label: "FAQs", href: "/page/faqs" },
+      { label: "FAQs", href: "/faqs/" },
     ],
   },
 ];

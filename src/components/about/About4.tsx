@@ -1,5 +1,6 @@
 import React from "react";
 import { FiArrowRight } from "react-icons/fi";
+import Link from "next/link";
 
 interface TrustItem {
   icon: string;
@@ -33,7 +34,7 @@ const About4: React.FC<About4Props> = ({
 
         <p className="about4__subtitle">{subtitle}</p>
 
-        <button className="stylebtn mt-20" type="button">
+        <Link href="/" className="stylebtn mt-20">
           <span className="stylebtn__pin" />
           <span className="stylebtn__eyebrow">
             SHOP NEW DROPS
@@ -41,7 +42,7 @@ const About4: React.FC<About4Props> = ({
               <FiArrowRight />
             </span>
           </span>
-        </button>
+        </Link>
 
       </div>
     </section>
