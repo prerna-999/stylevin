@@ -23,7 +23,7 @@ interface PaymentBadge {
 
 const needHelpLinks: FooterLink[] = [
   { url: '/contact/', name: 'Contact Us' },
-  { url: '/faq/', name: "FAQ's" },
+  { url: '/faqs/', name: "FAQ's" },
   { url: '/account/', name: 'My Account' },
   { url: '/track-order/', name: 'Track Order' },
   { url: '/returns-refunds/', name: 'Returns & Refunds' },

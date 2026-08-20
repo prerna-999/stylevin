@@ -3,7 +3,6 @@
   display: block;
   width: 100%;
   line-height: 0;
-  /* the wave shape uses currentColor, so this sets its fill to match the footer bg */
   color: var(--color-black);
   background: var(--bg-white);
 }
@@ -80,7 +79,7 @@
   bottom: 0;
   width: 100px;
   height: 2px;
-  background: linear-gradient(90deg, var(--color-1), var(--color-2));
+  background: var(--color-4);
 }
 
 .footer .linkList {
@@ -135,8 +134,8 @@
   width: 30px;
   height: 30px;
   border-radius: 50%;
-  border: 1px solid var(--color-1);
-  color: var(--color-1);
+  border: 1px solid var(--color-4);
+  color: var(--color-4);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -171,7 +170,7 @@
 }
 
 .footer .socialLink:hover {
-  background: linear-gradient(135deg, var(--color-1), var(--color-2));
+  background: var(--color-4);
   color: var(--color-black);
   transform: translateY(-2px);
 }
