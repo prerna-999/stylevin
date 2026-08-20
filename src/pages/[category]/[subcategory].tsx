@@ -59,8 +59,6 @@ const SubcategoryPage: React.FC<SubcategoryPageProps> = ({
             categoryConfig={categoryConfig}
             activeSubcategory={subcategory}
             onSubcategoryChange={(sub) => {
-              // "All" passes undefined -> go back to the category page.
-              // Any other pill -> navigate to /[category]/[subcategory].
               if (!sub) {
                 router.push(`/${category}`);
               } else {

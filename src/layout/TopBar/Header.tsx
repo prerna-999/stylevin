@@ -40,16 +40,16 @@ export const NAV_ITEMS: NavItem[] = [
       { label: "Infants", href: "/kids/infants" },
     ],
   },
-  {
-    label: "Accessories",
-    href: "/accessories",
-    children: [
-      { label: "Bags", href: "/accessories/bags" },
-      { label: "Watches", href: "/accessories/watches" },
-      { label: "Jewellery", href: "/accessories/jewellery" },
-      { label: "Belts", href: "/accessories/belts" },
-    ],
-  },
+  // {
+  //   label: "Accessories",
+  //   href: "/accessories",
+  //   children: [
+  //     { label: "Bags", href: "/accessories/bags" },
+  //     { label: "Watches", href: "/accessories/watches" },
+  //     { label: "Jewellery", href: "/accessories/jewellery" },
+  //     { label: "Belts", href: "/accessories/belts" },
+  //   ],
+  // },
   {
     label: "Page",
     href: "",
@@ -124,7 +124,7 @@ export default function Header() {
               <ShoppingBag size={20} strokeWidth={2} />
             </Link>
             <span className="icon-divider" />
-            <Link href="/account" aria-label="Account" className="icon-btn desktop-only">
+            <Link href="/profile/" aria-label="Account" className="icon-btn desktop-only">
               <User size={20} strokeWidth={2} />
             </Link>
 
