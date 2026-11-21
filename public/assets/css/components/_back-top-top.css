@@ -1,0 +1,89 @@
+.back-to-top {
+    position: fixed;
+    right: 28px;
+    bottom: 28px;
+    width: 54px;
+    height: 54px;
+    z-index: 999;
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+    border: none;
+    background: transparent;
+    padding: 0;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(16px) scale(0.9);
+    transition: opacity 0.35s ease, transform 0.35s ease, visibility 0.35s;
+  }
+  
+  .back-to-top.is-visible {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0) scale(1);
+  }
+  
+  .back-to-top svg {
+    position: absolute;
+    inset: 0;
+    width: 54px;
+    height: 54px;
+    transform: rotate(-90deg);
+  }
+  
+  .back-to-top .ring-bg {
+    fill: none;
+    stroke: rgba(48, 19, 17, 0.1);
+    stroke-width: 3;
+  }
+  
+  .back-to-top .ring-progress {
+    fill: none;
+    stroke: var(--color-1);
+    stroke-width: 3;
+    stroke-linecap: round;
+    transition: stroke-dashoffset 0.1s linear;
+  }
+  
+  .back-to-top .btn-core {
+    position: relative;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: var(--primary-color);
+    display: grid;
+    place-items: center;
+    box-shadow: var(--box-shadow);
+    transition: background 0.25s ease, transform 0.2s ease;
+  }
+  
+  .back-to-top:hover .btn-core {
+    background: var(--color-3);
+    transform: scale(1.06);
+  }
+  
+  .back-to-top .btn-core svg.arrow {
+    position: static;
+    width: 16px;
+    height: 16px;
+    transform: none;
+    stroke: var(--color-2);
+    fill: none;
+    stroke-width: 2.4;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    transition: transform 0.2s ease;
+  }
+  
+  .back-to-top:hover .btn-core svg.arrow {
+    transform: translateY(-2px);
+  }
+  
+  @media (prefers-reduced-motion: reduce) {
+    .back-to-top,
+    .back-to-top .ring-progress,
+    .back-to-top .btn-core,
+    .back-to-top .btn-core svg.arrow {
+      transition: none;
+    }
+  }

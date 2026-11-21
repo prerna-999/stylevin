@@ -1,0 +1,375 @@
+.legal-banner {
+  background: var(--hero-gradient);
+  padding: 60px 24px 70px;
+  font-family: var(--font-family);
+}
+
+.legal-banner__crumb {
+  max-width: 1200px;
+  margin: 0 auto 30px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--color-2);
+}
+
+.legal-banner__crumb .is-active {
+  color: var(--color-4);
+}
+
+.legal-banner__sep {
+  margin: 0 8px;
+  color: var(--color-2);
+  opacity: 0.5;
+}
+
+.legal-banner__content {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.legal-banner__title {
+  margin: 0 0 18px;
+  font-size: 42px;
+  font-weight: 800;
+  font-style: italic;
+}
+
+.legal-banner__title .line--accent {
+  color: var(--color-4);
+}
+
+.legal-banner__subtitle {
+  max-width: 640px;
+  margin: 0 auto;
+  text-align: left;
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--color-2);
+  opacity: 0.9;
+}
+
+.legal-content {
+  background: var(--bg-white);
+  padding: 60px 24px 80px;
+  font-family: var(--font-family);
+}
+
+.legal-content__inner {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.legal-content__updated {
+  font-size: 13px;
+  color: var(--text-color);
+  padding-bottom: 20px;
+}
+
+.legal-block {
+  margin-bottom: 34px;
+}
+
+.legal-block h2 {
+  font-size: 19px;
+  font-weight: 700;
+  color: var(--primary-color);
+  margin: 0 0 12px;
+}
+
+.legal-block p {
+  font-size: 14.5px;
+  line-height: 1.8;
+  color: var(--text-color);
+  margin: 0 0 8px;
+}
+
+.legal-block ul {
+  margin: 0 0 12px;
+  padding-left: 20px;
+}
+
+.legal-block li {
+  font-size: 14.5px;
+  line-height: 1.8;
+  color: var(--text-color);
+  margin-bottom: 6px;
+}
+
+.legal-block a {
+  color: var(--color-1);
+  font-weight: 600;
+  text-decoration: underline;
+}
+
+.legal-block a:hover {
+  color: var(--color-3);
+}
+
+@media (max-width: 639px) {
+  .legal-banner {
+    padding: 44px 16px 50px;
+  }
+
+  .legal-banner__title {
+    font-size: 30px;
+  }
+
+  .legal-content {
+    padding: 44px 16px 56px;
+  }
+}
+
+/* cod  */
+/* -------- STEPS (delivery route) -------- */
+.cod-steps {
+  background: var(--page-bg);
+  padding: 64px 24px 20px;
+}
+
+.cod-steps__eyebrow {
+  text-align: center;
+  max-width: 960px;
+  margin: 0 auto 44px;
+}
+
+.cod-badge {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+.cod-badge-pin {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--color-1);
+  margin-bottom: 8px;
+}
+
+.cod-badge-eyebrow {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--color-1);
+}
+
+.cod-badge-underline {
+  width: 34px;
+  height: 2px;
+  background: var(--color-1);
+  margin-top: 8px;
+  border-radius: 2px;
+}
+
+.cod-steps-title {
+  font-size: 28px;
+  margin: 16px 0 0;
+  color: var(--primary-color);
+}
+
+.cod-route {
+  max-width: 1080px;
+  margin: 0 auto;
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0;
+}
+
+.cod-route::before {
+  content: "";
+  position: absolute;
+  top: 26px;
+  left: calc(100% / 6);
+  right: calc(100% / 6);
+  height: 2px;
+  background-image: linear-gradient(90deg, var(--color-1) 0 8px, transparent 8px 16px);
+  background-size: 16px 2px;
+  z-index: 0;
+}
+
+.cod-stop {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  padding: 0 20px;
+}
+
+.cod-stop__dot {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: var(--primary-color);
+  color: var(--color-2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  font-weight: 700;
+  margin: 0 auto 20px;
+  box-shadow: var(--box-shadow-2);
+}
+
+.cod-stop h3 {
+  font-size: 16.5px;
+  margin: 0 0 8px;
+  color: var(--primary-color);
+}
+
+.cod-stop p {
+  font-size: 13px;
+  color: var(--text-color);
+  line-height: 1.7;
+  font-weight: 300;
+  margin: 0;
+  max-width: 260px;
+  margin-inline: auto;
+}
+
+@media (max-width: 760px) {
+  .cod-route {
+    grid-template-columns: 1fr;
+    gap: 36px;
+  }
+  .cod-route::before {
+    display: none;
+  }
+}
+
+/* -------- REASSURANCE STRIP -------- */
+.cod-strip {
+  max-width: 1080px;
+  margin: 56px auto 0;
+  padding: 0 24px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+@media (max-width: 760px) {
+  .cod-strip {
+    grid-template-columns: 1fr;
+  }
+}
+
+.cod-strip-item {
+  background: var(--color-white);
+  border-radius: 12px;
+  padding: 20px 22px;
+  box-shadow: var(--box-shadow-2);
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.cod-strip-item svg {
+  width: 26px;
+  height: 26px;
+  stroke: var(--color-1);
+  fill: none;
+  stroke-width: 1.6;
+  flex-shrink: 0;
+}
+
+.cod-strip-item span {
+  font-size: 13px;
+  color: var(--primary-color);
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+/* -------- FAQ ACCORDION -------- */
+.cod-faq {
+  padding: 80px 24px 90px;
+}
+
+.cod-faq__inner {
+  max-width: 760px;
+  margin: 0 auto;
+}
+
+.cod-faq__title {
+  font-size: 28px;
+  color: var(--primary-color);
+  text-align: center;
+  margin: 14px 0 40px;
+}
+
+.cod-faq__item {
+  border-bottom: 1px solid #e4e2df;
+}
+
+.cod-faq__q {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  background: none;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+  padding: 20px 4px;
+  font-family: var(--font-family);
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--primary-color);
+}
+
+.cod-faq__q .plus {
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.cod-faq__q .plus::before,
+.cod-faq__q .plus::after {
+  content: "";
+  position: absolute;
+  background: var(--color-1);
+  transition: transform 0.25s ease;
+}
+
+.cod-faq__q .plus::before {
+  top: 50%;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  transform: translateY(-50%);
+}
+
+.cod-faq__q .plus::after {
+  left: 50%;
+  top: 0;
+  width: 2px;
+  height: 100%;
+  transform: translateX(-50%);
+}
+
+.cod-faq__item.open .plus::after {
+  transform: translateX(-50%) rotate(90deg);
+  opacity: 0;
+}
+
+.cod-faq__a {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+}
+
+.cod-faq__item.open .cod-faq__a {
+  max-height: 200px;
+}
+
+.cod-faq__a p {
+  margin: 0 4px 20px;
+  font-size: 13.5px;
+  color: var(--text-color);
+  font-weight: 300;
+  line-height: 1.8;
+  max-width: 600px;
+}
