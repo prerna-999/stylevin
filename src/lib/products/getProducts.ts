@@ -94,6 +94,11 @@ export async function getProducts(
   return { products: paginated, total, page, perPage, totalPages };
 }
 
+/** Every product in the catalog — the one place search (and anything else) reads the full list from. */
+export async function getAllProducts(): Promise<Product[]> {
+  return dummyProducts;
+}
+
 export async function getProductBySlug(
   slug: string
 ): Promise<Product | undefined> {

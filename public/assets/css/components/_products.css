@@ -969,3 +969,14 @@
   flex-wrap: wrap;
   overflow-x: hidden;
 }
+
+
+/* ---------- search results page ---------- */
+.search-results { max-width: 1280px; margin: 0 auto; padding: 32px 24px 80px; }
+.search-results__empty { text-align: center; padding: 50px 10px; }
+.search-results__empty h2 { margin: 0 0 8px; font-size: 24px; font-weight: 800; color: var(--primary-color); }
+.search-results__empty p { margin: 0 0 20px; color: var(--text-color); }
+.search-results__cats { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+.search-results__chip { padding: 9px 20px; border: 1px solid var(--primary-color); border-radius: 999px; color: var(--primary-color); font-weight: 600; text-decoration: none; transition: .2s; }
+.search-results__chip:hover { background: var(--primary-color); color: #fff; }
+@media (max-width: 575px) { .search-results { padding: 20px 14px 60px; } }

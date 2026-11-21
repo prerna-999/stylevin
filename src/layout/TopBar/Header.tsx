@@ -14,6 +14,7 @@ import {
   Menu,
 } from "lucide-react";
 import MobileMenu from "./Mobile-Menu";
+import HeaderSearch from "./HeaderSearch";
 import { useAuth, clearSession } from "@/lib/auth";
 import { useCart } from "@/context/CartContext";
 
@@ -69,6 +70,7 @@ export const NAV_ITEMS: NavItem[] = [
 
 export default function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
   const [logoError, setLogoError] = useState(false);
 
   // Authentication
@@ -135,13 +137,16 @@ export default function Header() {
           {/* Icons */}
           <Col xs="auto" className="col-icons">
 
-            <Link
-              href="/search"
-              aria-label="Search"
-              className="icon-btn desktop-only"
+            <button
+              type="button"
+              aria-label={searchOpen ? "Close search" : "Search"}
+              aria-expanded={searchOpen}
+              data-search-toggle
+              className="icon-btn search-toggle"
+              onClick={() => setSearchOpen((v) => !v)}
             >
               <Search size={20} strokeWidth={2} />
-            </Link>
+            </button>
 
             <span className="icon-divider" />
 
@@ -223,6 +228,8 @@ export default function Header() {
           </Col>
         </Row>
       </Container>
+
+      <HeaderSearch open={searchOpen} onClose={() => setSearchOpen(false)} />
 
       <MobileMenu
         open={mobileOpen}

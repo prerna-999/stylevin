@@ -16,6 +16,7 @@ export interface Product {
   images: string[];
   variants: ProductVariant[];
   colors: string[];
+  brand?: string;         // defaults to the store brand when omitted
   code?: string;
   isNew?: boolean;
   isTrending?: boolean;

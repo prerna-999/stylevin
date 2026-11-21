@@ -112,6 +112,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { X, ChevronDown, Search, Heart, ShoppingBag, User } from "lucide-react";
 import { NAV_ITEMS } from "./Header";
 import { useCart } from "@/context/CartContext";
@@ -124,6 +125,16 @@ export default function MobileMenu({ open, onClose }: MobileMenuProps) {
   const [expanded, setExpanded] = useState<string | null>(null);
   const [logoError, setLogoError] = useState(false);
   const { count } = useCart();
+  const router = useRouter();
+  const [term, setTerm] = useState("");
+
+  const submitSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    const q = term.trim();
+    if (!q) return;
+    onClose();
+    router.push(`/search?q=${encodeURIComponent(q)}`);
+  };
 
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";
@@ -154,10 +165,19 @@ export default function MobileMenu({ open, onClose }: MobileMenuProps) {
         </div>
 
         {/* search row */}
-        <div className="drawer-search">
-          <Search size={18} color="var(--text-color)" />
-          <input type="text" placeholder="Search products..." />
-        </div>
+        <form className="drawer-search" role="search" onSubmit={submitSearch}>
+          <button type="submit" aria-label="Search" style={{ background: "none", border: 0, padding: 0, display: "inline-flex" }}>
+            <Search size={18} color="var(--text-color)" />
+          </button>
+          <input
+            type="search"
+            placeholder="Search products..."
+            value={term}
+            onChange={(e) => setTerm(e.target.value)}
+            enterKeyHint="search"
+            aria-label="Search products"
+          />
+        </form>
 
         {/* quick action icons */}
         <div className="drawer-quicklinks">
