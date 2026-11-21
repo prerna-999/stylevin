@@ -1,8 +1,11 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useCallback, useRef, useState } from "react";
-import { Container } from "react-bootstrap"; 
+import { Container } from "react-bootstrap";
+import { useCart } from "@/context/CartContext";
+import type { Product } from "@/types/product";
 
 export interface ComboOffer {
   id: number;
@@ -89,6 +92,26 @@ const comboOffers: ComboOffer[] = [
   },
 ];
 
+const toNumber = (s: string) => Number(s.replace(/[^0-9]/g, ""));
+
+/**
+ * A combo goes into the cart like any other product. Ids start at 9000 so they
+ * can never clash with a catalog product id; "combo-" slugs are recognised by the cart.
+ */
+const comboToProduct = (c: ComboOffer): Product => ({
+  id: 9000 + c.id,
+  slug: `combo-${c.id}`,
+  name: c.title,
+  description: c.alt,
+  category: "combo",
+  subcategory: "combo",
+  price: toNumber(c.price),
+  mrp: toNumber(c.oldPrice ?? c.price),
+  images: [c.image],
+  variants: [],
+  colors: [],
+});
+
 const getDiscount = (price: string, oldPrice?: string) => {
   if (!oldPrice) return null;
   const num = (s: string) => Number(s.replace(/[^0-9]/g, ""));
@@ -99,6 +122,7 @@ const getDiscount = (price: string, oldPrice?: string) => {
 };
 
 export default function ComboOffers() {
+  const { addItem, isInCart } = useCart();
   const trackRef = useRef<HTMLDivElement>(null);
   const [isPressing, setIsPressing] = useState(false);
   const isDraggingRef = useRef(false);
@@ -120,6 +144,9 @@ export default function ComboOffers() {
   const handlePointerDown = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
     const track = trackRef.current;
     if (!track) return;
+    // a press that starts on the button / link must stay a normal click,
+    // otherwise pointer capture swallows it and "Add to Cart" never fires
+    if ((e.target as HTMLElement).closest("button, a")) return;
     isDraggingRef.current = true;
     setIsPressing(true);
     draggedRef.current = false;
@@ -146,7 +173,7 @@ export default function ComboOffers() {
     setIsPressing(false);
   }, []);
 
-  // Prevent the "Buy Now" link from firing right after a drag
+  // Prevent the "Add to Cart" button from firing right after a drag
   const handleTrackClickCapture = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
     if (draggedRef.current) {
       e.preventDefault();
@@ -156,7 +183,7 @@ export default function ComboOffers() {
   }, []);
 
   return (
-    <section className="combo-section" aria-labelledby="combo-heading">
+    <section className="combo-section" id="combo-offers" aria-labelledby="combo-heading">
       <div className="combo-curve" aria-hidden="true" />
 
       <Container>
@@ -224,9 +251,19 @@ export default function ComboOffers() {
                             )}
                           </div>
 
-                          <a href={combo.href} className="combo-buy-btn">
-                            Buy Now
-                          </a>
+                          {isInCart(9000 + combo.id) ? (
+                            <Link href="/cart" className="combo-buy-btn">
+                              View Cart
+                            </Link>
+                          ) : (
+                            <button
+                              type="button"
+                              className="combo-buy-btn"
+                              onClick={() => addItem(comboToProduct(combo))}
+                            >
+                              Add to Cart
+                            </button>
+                          )}
                         </div>
                       </div>
                     </div>

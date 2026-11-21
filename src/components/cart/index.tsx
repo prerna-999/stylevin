@@ -141,7 +141,7 @@ const CartPage: React.FC = () => {
                 return (
                   <li key={lineKey(item)} className="cart-item">
                     <Link
-                      href={`/product/${item.slug}`}
+                      href={item.slug.startsWith("combo-") ? "/#combo-offers" : `/product/${item.slug}`}
                       className="cart-item__image"
                     >
                       <Image
@@ -154,7 +154,7 @@ const CartPage: React.FC = () => {
 
                     <div className="cart-item__body">
                       <Link
-                        href={`/product/${item.slug}`}
+                        href={item.slug.startsWith("combo-") ? "/#combo-offers" : `/product/${item.slug}`}
                         className="cart-item__name"
                       >
                         {item.name}

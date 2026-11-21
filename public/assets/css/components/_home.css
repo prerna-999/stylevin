@@ -1913,3 +1913,6 @@
   color: var(--color-4);
   transform: scale(1.03);
 }
+
+/* Combo "Add to Cart" is a <button> now */
+button.combo-buy-btn { border: 0; cursor: pointer; font-family: inherit; line-height: normal; }

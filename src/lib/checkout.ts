@@ -174,7 +174,7 @@ export async function saveAddress(user: AuthUser, addr: Address): Promise<Addres
     /* fall through to local copy */
   }
   // backend unavailable -> keep the address on this device for this account
-  const list = readLocal(user).map((a) => ({ ...a, isDefault: false }));
+  const list: Address[] = readLocal(user).map((a) => ({ ...a, isDefault: false }));
   const id = addr.id ?? `local-${Date.now()}`;
   const next = { ...body, id } as Address;
   const idx = list.findIndex((a) => a.id === id);
