@@ -1,5 +1,6 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import Image from "next/image";
 import { FiHeart, FiShoppingBag, FiCheck, FiX } from "react-icons/fi";
 import { Product } from "@/types/product";
@@ -12,13 +13,10 @@ interface ProductCardProps {
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
-  const { addItem } = useCart();
+  const { addItem, isInCart } = useCart();
   const { has, toggle } = useWishlist();
   const [pickingSize, setPickingSize] = useState(false);
-  const [added, setAdded] = useState(false);
-  const timer = useRef<number | undefined>(undefined);
-
-  useEffect(() => () => window.clearTimeout(timer.current), []);
+  const router = useRouter();
 
   const discount = Math.round(
     ((product.mrp - product.price) / product.mrp) * 100
@@ -26,13 +24,12 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const sizes = inStockSizes(product);
   const soldOut = sizes.length === 0;
   const wished = has(product.id);
+  // once any size of this product is in the cart the button becomes "View Cart"
+  const added = isInCart(product.id);
 
   const addToCart = (size?: string) => {
-    addItem(product, size);
+    addItem(product, { size, color: product.colors[0] });
     setPickingSize(false);
-    setAdded(true);
-    window.clearTimeout(timer.current);
-    timer.current = window.setTimeout(() => setAdded(false), 1800);
   };
 
   const handleQuickAdd = () => {
@@ -117,14 +114,14 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
             <button
               type="button"
               className={`product-card__add ${added ? "is-added" : ""}`}
-              onClick={handleQuickAdd}
-              disabled={added || soldOut}
+              onClick={added ? () => router.push("/cart") : handleQuickAdd}
+              disabled={soldOut}
             >
               {soldOut ? (
                 "Out of stock"
               ) : added ? (
                 <>
-                  <FiCheck /> Added
+                  <FiCheck /> View Cart
                 </>
               ) : (
                 <>

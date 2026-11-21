@@ -9,6 +9,7 @@ import {
   getSizeOptions,
   sortProducts,
 } from "@/lib/products/listing";
+import CategoryPills from "./CategoryPills";
 import ProductSidebar from "./ProductSidebar";
 import ProductFilters from "./ProductFilters";
 import ProductGrid from "./ProductGrid";
@@ -16,6 +17,8 @@ import ProductPagination from "./ProductPagination";
 
 interface ProductListingProps {
   products: Product[];
+  /** whole-category catalog: only the price range comes from here, so the Price filter is always usable. Sizes and colours come from `products` (the current subcategory). */
+  priceSource?: Product[];
   categoryConfig: CategoryConfig;
   activeSubcategory?: string;
   pageSize?: number;
@@ -23,6 +26,7 @@ interface ProductListingProps {
 
 const ProductListing: React.FC<ProductListingProps> = ({
   products,
+  priceSource,
   categoryConfig,
   activeSubcategory,
   pageSize = 12,
@@ -37,7 +41,7 @@ const ProductListing: React.FC<ProductListingProps> = ({
   const [drawerOpen, setDrawerOpen] = useState(false);
 
   /* ---------- filter options come from the catalog itself ---------- */
-  const priceBounds = useMemo(() => getPriceBounds(products), [products]);
+  const priceBounds = useMemo(() => getPriceBounds(priceSource ?? products), [priceSource, products]);
   const sizeOptions = useMemo(() => getSizeOptions(products), [products]);
   const colorOptions = useMemo(() => getColorOptions(products), [products]);
 
@@ -90,12 +94,15 @@ const ProductListing: React.FC<ProductListingProps> = ({
   const toggle = (list: string[], value: string) =>
     list.includes(value) ? list.filter((x) => x !== value) : [...list, value];
 
-  const activeCount = sizes.length + colors.length + (priceActive ? 1 : 0);
+  const sortActive = sort !== "newest";
+  const activeCount =
+    sizes.length + colors.length + (priceActive ? 1 : 0) + (sortActive ? 1 : 0);
 
   const clearAll = () => {
     setSizes([]);
     setColors([]);
     setPrice(null);
+    setSort("newest");
     setPage(1);
   };
 
@@ -106,6 +113,11 @@ const ProductListing: React.FC<ProductListingProps> = ({
           <ProductSidebar
             categoryConfig={categoryConfig}
             activeSubcategory={activeSubcategory}
+            sort={sort}
+            onSortChange={(s) => {
+              setSort(s);
+              setPage(1);
+            }}
             sizeOptions={sizeOptions}
             selectedSizes={sizes}
             onToggleSize={(s) => {
@@ -131,6 +143,11 @@ const ProductListing: React.FC<ProductListingProps> = ({
           />
 
           <div className="product-listing__main">
+            <CategoryPills
+              categoryConfig={categoryConfig}
+              activeSubcategory={activeSubcategory}
+            />
+
             <ProductFilters
               sort={sort}
               onSortChange={(s) => {

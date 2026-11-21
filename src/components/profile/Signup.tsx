@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { saveSession } from "@/lib/auth";
+import { saveSession, getRedirectTarget } from "@/lib/auth";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -40,9 +40,9 @@ export default function Signup({ onSwitchToLogin }: SignupProps) {
           Array.isArray(data.message) ? data.message.join(", ") : data.message || "Signup failed"
         );
       }
-
- saveSession(data.token, data.user, true);
-router.replace("/");
+      saveSession(data.token, data.user, true);
+      // go back to where the customer came from (e.g. /checkout); home only if nothing was pending
+      router.replace(getRedirectTarget("/") as string);
     } catch (err: any) {
       setError(err.message || "Could not reach the server");
     } finally {

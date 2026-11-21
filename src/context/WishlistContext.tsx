@@ -11,6 +11,7 @@ interface WishlistContextValue {
   ids: number[];
   has: (id: number) => boolean;
   toggle: (id: number) => void;
+  ready: boolean;
 }
 
 const STORAGE_KEY = "stylevin-wishlist";
@@ -49,8 +50,13 @@ export const WishlistProvider: React.FC<{ children: React.ReactNode }> = ({
   }, []);
 
   const value = useMemo<WishlistContextValue>(
-    () => ({ ids, has: (id) => ids.includes(id), toggle }),
-    [ids, toggle]
+    () => ({
+      ids,
+      has: (id) => ids.includes(id),
+      toggle,
+      ready: loaded,
+    }),
+    [ids, toggle, loaded]
   );
 
   return (

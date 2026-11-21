@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import MobileMenu from "./Mobile-Menu";
 import { useAuth, clearSession } from "@/lib/auth";
+import { useCart } from "@/context/CartContext";
 
 const logoSrc = "/assets/img/logo/stylevin-logo.png";
 
@@ -72,6 +73,8 @@ export default function Header() {
 
   // Authentication
   const { user } = useAuth();
+  const { count } = useCart();
+  const cartLabel = count > 0 ? `Cart, ${count} item${count > 1 ? "s" : ""}` : "Cart";
 
   const handleLogout = () => {
     clearSession();
@@ -154,10 +157,15 @@ export default function Header() {
 
             <Link
               href="/cart"
-              aria-label="Cart"
-              className="icon-btn desktop-only"
+              aria-label={cartLabel}
+              className="icon-btn desktop-only cart-link"
             >
               <ShoppingBag size={20} strokeWidth={2} />
+              {count > 0 && (
+                <span className="cart-badge" aria-hidden="true">
+                  {count > 99 ? "99+" : count}
+                </span>
+              )}
             </Link>
 
             <span className="icon-divider" />
@@ -188,6 +196,20 @@ export default function Header() {
                 </button>
               </div>
             )}
+
+            {/* Mobile cart (the desktop icons are hidden on small screens) */}
+            <Link
+              href="/cart"
+              aria-label={cartLabel}
+              className="icon-btn mobile-cart cart-link"
+            >
+              <ShoppingBag size={22} strokeWidth={2} />
+              {count > 0 && (
+                <span className="cart-badge" aria-hidden="true">
+                  {count > 99 ? "99+" : count}
+                </span>
+              )}
+            </Link>
 
             {/* Mobile menu */}
             <button

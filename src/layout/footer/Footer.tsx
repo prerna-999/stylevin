@@ -32,7 +32,6 @@ const needHelpLinks: FooterLink[] = [
 
 const moreInfoLinks: FooterLink[] = [
   { url: '/about/', name: 'About Us' },
-  { url: '/blogs/', name: "Blog's" },
   { url: '/terms-and-condition/', name: 'Terms' },
   { url: '/sitemap/', name: 'Sitemap' },
   { url: '/privacy-policy/', name: 'Privacy Policy' },
@@ -174,7 +173,7 @@ const FooterLayout = () => {
                     support@stylevin.com
                   </a>
                 </li>
-                {/* <li>
+                <li>
                   <a
                     href="https://maps.app.goo.gl/"
                     target="_blank"
@@ -186,7 +185,7 @@ const FooterLayout = () => {
                     TOWER-A, 604, Bestech Business Tower, SAS Nagar, Punjab
                     160062
                   </a>
-                </li> */}
+                </li>
               </ul>
 
               <ul className="socialList">

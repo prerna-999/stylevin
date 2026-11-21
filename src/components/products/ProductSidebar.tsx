@@ -1,11 +1,15 @@
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
-import { FiX } from "react-icons/fi";
+import { FiSliders, FiX } from "react-icons/fi";
 import { CategoryConfig } from "@/lib/categories";
+import { SORT_OPTIONS, SortValue } from "@/lib/products/listing";
 
 interface ProductSidebarProps {
   categoryConfig: CategoryConfig;
   activeSubcategory?: string;
+
+  sort: SortValue;
+  onSortChange: (sort: SortValue) => void;
 
   sizeOptions: string[];
   selectedSizes: string[];
@@ -22,13 +26,26 @@ interface ProductSidebarProps {
   activeCount: number;
   onClearAll: () => void;
 
-  isOpen: boolean; // mobile / tablet drawer
+  isOpen: boolean; // drawer
   onClose: () => void;
 }
+
+type Tab = "sort" | "size" | "price" | "category" | "color";
+
+/** Exact order: Sort By · Size · Price · Category · Color */
+const TABS: { id: Tab; label: string }[] = [
+  { id: "sort", label: "Sort By" },
+  { id: "size", label: "Size" },
+  { id: "price", label: "Price" },
+  { id: "category", label: "Category" },
+  { id: "color", label: "Color" },
+];
 
 const ProductSidebar: React.FC<ProductSidebarProps> = ({
   categoryConfig,
   activeSubcategory,
+  sort,
+  onSortChange,
   sizeOptions,
   selectedSizes,
   onToggleSize,
@@ -43,15 +60,31 @@ const ProductSidebar: React.FC<ProductSidebarProps> = ({
   isOpen,
   onClose,
 }) => {
+  const [tab, setTab] = useState<Tab>("sort");
+
   const [minVal, maxVal] = priceRange;
   const span = Math.max(priceBounds.max - priceBounds.min, 1);
   const leftPct = ((minVal - priceBounds.min) / span) * 100;
   const rightPct = 100 - ((maxVal - priceBounds.min) / span) * 100;
 
+  const fmt = (n: number) => `₹${n.toLocaleString("en-IN")}`;
+  const priceText = `${fmt(minVal)} - ${fmt(maxVal)}${
+    maxVal >= priceBounds.max ? "+" : ""
+  }`;
+
   const setMin = (v: number) =>
     onPriceChange([Math.min(Math.max(v, priceBounds.min), maxVal), maxVal]);
   const setMax = (v: number) =>
     onPriceChange([minVal, Math.max(Math.min(v, priceBounds.max), minVal)]);
+
+  /* small dot on a tab when something in it is applied */
+  const tabActive: Record<Tab, boolean> = {
+    sort: sort !== "newest",
+    size: selectedSizes.length > 0,
+    price: minVal > priceBounds.min || maxVal < priceBounds.max,
+    category: false,
+    color: selectedColors.length > 0,
+  };
 
   return (
     <>
@@ -66,7 +99,7 @@ const ProductSidebar: React.FC<ProductSidebarProps> = ({
       >
         <div className="product-sidebar__head">
           <h3 className="product-sidebar__title">
-            Filters{" "}
+            <FiSliders /> Filter
             {activeCount > 0 && (
               <span className="product-sidebar__title-count">
                 ({activeCount})
@@ -74,15 +107,14 @@ const ProductSidebar: React.FC<ProductSidebarProps> = ({
             )}
           </h3>
           <div className="product-sidebar__head-actions">
-            {activeCount > 0 && (
-              <button
-                type="button"
-                className="product-sidebar__clear"
-                onClick={onClearAll}
-              >
-                Clear all
-              </button>
-            )}
+            <button
+              type="button"
+              className="product-sidebar__clear"
+              onClick={onClearAll}
+              disabled={activeCount === 0}
+            >
+              Clear All
+            </button>
             <button
               type="button"
               className="product-sidebar__close"
@@ -94,140 +126,149 @@ const ProductSidebar: React.FC<ProductSidebarProps> = ({
           </div>
         </div>
 
-        {/* ---------- Category (real links → each has its own URL) ---------- */}
-        <div className="product-sidebar__group">
-          <h4 className="product-sidebar__label">Category</h4>
-          <ul className="product-sidebar__list">
-            <li>
-              <Link
-                href={`/${categoryConfig.slug}`}
-                className={`product-sidebar__link ${
-                  !activeSubcategory ? "is-active" : ""
+        <div className="product-sidebar__body">
+          {/* ---------- left: filter names ---------- */}
+          <div className="product-sidebar__tabs" role="tablist">
+            {TABS.map((t) => (
+              <button
+                key={t.id}
+                type="button"
+                role="tab"
+                aria-selected={tab === t.id}
+                className={`product-sidebar__tab ${
+                  tab === t.id ? "is-active" : ""
                 }`}
+                onClick={() => setTab(t.id)}
               >
-                All {categoryConfig.label}
-              </Link>
-            </li>
-            {categoryConfig.subcategories.map((sub) => (
-              <li key={sub.slug}>
-                <Link
-                  href={`/${categoryConfig.slug}/${sub.slug}`}
-                  className={`product-sidebar__link ${
-                    activeSubcategory === sub.slug ? "is-active" : ""
-                  }`}
-                >
-                  {sub.label}
-                </Link>
-              </li>
+                {t.label}
+                {tabActive[t.id] && (
+                  <span className="product-sidebar__tab-dot" />
+                )}
+              </button>
             ))}
-          </ul>
-        </div>
-
-        {/* ---------- Size ---------- */}
-        {sizeOptions.length > 0 && (
-          <div className="product-sidebar__group">
-            <h4 className="product-sidebar__label">Size</h4>
-            <div className="product-sidebar__sizes">
-              {sizeOptions.map((size) => {
-                const active = selectedSizes.includes(size);
-                return (
-                  <button
-                    key={size}
-                    type="button"
-                    className={`product-sidebar__size ${
-                      active ? "is-active" : ""
-                    }`}
-                    aria-pressed={active}
-                    onClick={() => onToggleSize(size)}
-                  >
-                    {size}
-                  </button>
-                );
-              })}
-            </div>
           </div>
-        )}
 
-        {/* ---------- Colour ---------- */}
-        {colorOptions.length > 0 && (
-          <div className="product-sidebar__group">
-            <h4 className="product-sidebar__label">Colour</h4>
-            <div className="product-sidebar__colors">
-              {colorOptions.map((hex) => {
-                const active = selectedColors.includes(hex);
-                return (
-                  <button
-                    key={hex}
-                    type="button"
-                    className={`product-sidebar__color ${
-                      active ? "is-active" : ""
-                    }`}
-                    style={{ background: hex }}
-                    aria-label={`Colour ${hex}`}
-                    aria-pressed={active}
-                    title={hex}
-                    onClick={() => onToggleColor(hex)}
+          {/* ---------- right: options of the selected filter ---------- */}
+          <div className="product-sidebar__panel" role="tabpanel">
+            {tab === "sort" && (
+              <ul className="product-sidebar__list">
+                {SORT_OPTIONS.map((opt) => (
+                  <li key={opt.value}>
+                    <label className="product-sidebar__check">
+                      <input
+                        type="checkbox"
+                        checked={sort === opt.value}
+                        onChange={() => onSortChange(opt.value)}
+                      />
+                      <span>{opt.label}</span>
+                    </label>
+                  </li>
+                ))}
+              </ul>
+            )}
+
+            {tab === "size" &&
+              (sizeOptions.length > 0 ? (
+                <ul className="product-sidebar__list">
+                  {sizeOptions.map((size) => (
+                    <li key={size}>
+                      <label className="product-sidebar__check">
+                        <input
+                          type="checkbox"
+                          checked={selectedSizes.includes(size)}
+                          onChange={() => onToggleSize(size)}
+                        />
+                        <span>{size}</span>
+                      </label>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p className="product-sidebar__empty">No sizes available</p>
+              ))}
+
+            {tab === "price" && (
+              <div>
+                <div className="product-sidebar__range">
+                  <div className="product-sidebar__range-track" />
+                  <div
+                    className="product-sidebar__range-fill"
+                    style={{ left: `${leftPct}%`, right: `${rightPct}%` }}
                   />
-                );
-              })}
-            </div>
+                  <input
+                    type="range"
+                    min={priceBounds.min}
+                    max={priceBounds.max}
+                    value={minVal}
+                    onChange={(e) => setMin(Number(e.target.value))}
+                    aria-label="Minimum price"
+                  />
+                  <input
+                    type="range"
+                    min={priceBounds.min}
+                    max={priceBounds.max}
+                    value={maxVal}
+                    onChange={(e) => setMax(Number(e.target.value))}
+                    aria-label="Maximum price"
+                  />
+                </div>
+                <p className="product-sidebar__price-text">{priceText}</p>
+              </div>
+            )}
+
+            {tab === "category" && (
+              <ul className="product-sidebar__list">
+                <li>
+                  <Link
+                    href={`/${categoryConfig.slug}`}
+                    className={`product-sidebar__link ${
+                      !activeSubcategory ? "is-active" : ""
+                    }`}
+                  >
+                    All {categoryConfig.label}
+                  </Link>
+                </li>
+                {categoryConfig.subcategories.map((sub) => (
+                  <li key={sub.slug}>
+                    <Link
+                      href={`/${categoryConfig.slug}/${sub.slug}`}
+                      className={`product-sidebar__link ${
+                        activeSubcategory === sub.slug ? "is-active" : ""
+                      }`}
+                    >
+                      {sub.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            )}
+
+            {tab === "color" &&
+              (colorOptions.length > 0 ? (
+                <div className="product-sidebar__colors">
+                  {colorOptions.map((hex) => {
+                    const active = selectedColors.includes(hex);
+                    return (
+                      <button
+                        key={hex}
+                        type="button"
+                        className={`product-sidebar__color ${
+                          active ? "is-active" : ""
+                        }`}
+                        style={{ background: hex }}
+                        aria-label={`Colour ${hex}`}
+                        aria-pressed={active}
+                        title={hex}
+                        onClick={() => onToggleColor(hex)}
+                      />
+                    );
+                  })}
+                </div>
+              ) : (
+                <p className="product-sidebar__empty">No colours available</p>
+              ))}
           </div>
-        )}
-
-        {/* ---------- Price ---------- */}
-        {priceBounds.max > priceBounds.min && (
-          <div className="product-sidebar__group">
-            <h4 className="product-sidebar__label">Price</h4>
-
-            <div className="product-sidebar__range">
-              <div className="product-sidebar__range-track" />
-              <div
-                className="product-sidebar__range-fill"
-                style={{ left: `${leftPct}%`, right: `${rightPct}%` }}
-              />
-              <input
-                type="range"
-                min={priceBounds.min}
-                max={priceBounds.max}
-                value={minVal}
-                onChange={(e) => setMin(Number(e.target.value))}
-                aria-label="Minimum price"
-              />
-              <input
-                type="range"
-                min={priceBounds.min}
-                max={priceBounds.max}
-                value={maxVal}
-                onChange={(e) => setMax(Number(e.target.value))}
-                aria-label="Maximum price"
-              />
-            </div>
-
-            <div className="product-sidebar__price-inputs">
-              <label>
-                <span>Min (₹)</span>
-                <input
-                  type="number"
-                  value={minVal}
-                  min={priceBounds.min}
-                  max={maxVal}
-                  onChange={(e) => setMin(Number(e.target.value))}
-                />
-              </label>
-              <span className="product-sidebar__price-dash">–</span>
-              <label>
-                <span>Max (₹)</span>
-                <input
-                  type="number"
-                  value={maxVal}
-                  min={minVal}
-                  max={priceBounds.max}
-                  onChange={(e) => setMax(Number(e.target.value))}
-                />
-              </label>
-            </div>
-          </div>
-        )}
+        </div>
 
         <button
           type="button"

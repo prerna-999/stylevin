@@ -1,4 +1,8 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useRouter } from "next/router";
+import { useWishlist } from "@/context/WishlistContext";
+import { useCart } from "@/context/CartContext";
+import { dummyProducts } from "@/data/dummyProducts";
 
 interface SizeOption {
   label: string;
@@ -280,7 +284,9 @@ const formatPrice = (value: number) =>
 
 const NewDrop: React.FC = () => {
   const [activeTab, setActiveTab] = useState<"men" | "women">("men");
-  const [wishlisted, setWishlisted] = useState<Set<string>>(new Set());
+  const { has: isSaved, toggle: toggleSaved } = useWishlist();
+  const { addItem, isInCart } = useCart();
+  const router = useRouter();
   const [isPressing, setIsPressing] = useState(false);
   const trackRef = useRef<HTMLDivElement | null>(null);
   const isDraggingRef = useRef(false);
@@ -349,16 +355,13 @@ const NewDrop: React.FC = () => {
     }
   }, []);
 
-  const toggleWishlist = (id: string) => {
-    setWishlisted((prev) => {
-      const next = new Set(prev);
-      if (next.has(id)) {
-        next.delete(id);
-      } else {
-        next.add(id);
-      }
-      return next;
-    });
+  // Home cards share the same wishlist as the rest of the site (matched by product code)
+  const catalogId = (code: string) =>
+    dummyProducts.find((p) => p.code === code)?.id;
+
+  const toggleWishlist = (code: string) => {
+    const id = catalogId(code);
+    if (id !== undefined) toggleSaved(id);
   };
 
   const openQuickAdd = (product: Product) => {
@@ -401,16 +404,40 @@ const NewDrop: React.FC = () => {
 
   const handleConfirmAdd = () => {
     if (!quickAddProduct) return;
+    const variant = quickAddProduct.variants[activeVariantIdx];
+    const catalogItem = dummyProducts.find((p) => p.code === quickAddProduct.code);
+
+    // already in the cart → the button reads "View Cart"
+    if (catalogItem && selectedSize && isInCart(catalogItem.id, selectedSize, variant.hex)) {
+      setQuickAddProduct(null);
+      router.push("/cart");
+      return;
+    }
     if (!selectedSize) {
       setSizeError(true);
       return;
     }
-    const variant = quickAddProduct.variants[activeVariantIdx];
+    if (catalogItem) {
+      addItem(catalogItem, {
+        size: selectedSize,
+        color: variant.hex,
+        colorName: variant.name,
+        image: variant.image,
+      });
+    }
     setToastMessage(`Added ${quickAddProduct.name} · ${variant.name} · ${selectedSize}`);
-    setQuickAddProduct(null);
+    // stay open so the button can switch to "View Cart"
   };
 
   const activeVariant = quickAddProduct?.variants[activeVariantIdx];
+  const quickAddCatalog = quickAddProduct
+    ? dummyProducts.find((p) => p.code === quickAddProduct.code)
+    : undefined;
+  const quickAddInCart =
+    !!quickAddCatalog &&
+    !!selectedSize &&
+    !!activeVariant &&
+    isInCart(quickAddCatalog.id, selectedSize, activeVariant.hex);
 
   return (
     <section className="new-drop" aria-label="New drop products">
@@ -478,7 +505,8 @@ const NewDrop: React.FC = () => {
             onClickCapture={handleTrackClickCapture}
           >
             {products.map((product) => {
-              const isWishlisted = wishlisted.has(product.id);
+              const catalogProductId = catalogId(product.code);
+              const isWishlisted = catalogProductId !== undefined && isSaved(catalogProductId);
               const listingVariant = product.variants[0];
               return (
                 <div className="new-drop-card" key={product.id}>
@@ -497,7 +525,7 @@ const NewDrop: React.FC = () => {
                       className={`new-drop-card__wishlist${isWishlisted ? " new-drop-card__wishlist--active" : ""}`}
                       aria-label={isWishlisted ? "Remove from wishlist" : "Add to wishlist"}
                       aria-pressed={isWishlisted}
-                      onClick={() => toggleWishlist(product.id)}
+                      onClick={() => toggleWishlist(product.code)}
                     >
                       <svg width="16" height="14" viewBox="0 0 16 14" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path
@@ -643,7 +671,7 @@ const NewDrop: React.FC = () => {
               </div>
 
               <button type="button" className="quick-add__confirm" onClick={handleConfirmAdd}>
-                Add to Bag
+                {quickAddInCart ? "View Cart" : "Add to Cart"}
               </button>
             </div>
           </div>

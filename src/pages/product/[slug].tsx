@@ -1,121 +1,93 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { GetStaticPaths, GetStaticProps } from "next";
-import Image from "next/image";
+import Head from "next/head";
+import Link from "next/link";
+import { FiChevronRight } from "react-icons/fi";
 import { dummyProducts } from "@/data/dummyProducts";
 import {
   getProductBySlug,
   getRelatedProducts,
 } from "@/lib/products/getProducts";
+import { getProductReviews } from "@/lib/products/reviews";
+import { getCategoryConfig } from "@/lib/categories";
 import { Product } from "@/types/product";
-import ProductGrid from "@/components/products/ProductGrid";
+import { Review, ReviewSummary } from "@/types/review";
+import ProductGallery from "@/components/product-detail/ProductGallery";
+import ProductInfo from "@/components/product-detail/ProductInfo";
+import ProductReviews from "@/components/product-detail/ProductReviews";
+import ProductRecommendations from "@/components/product-detail/ProductRecommendations";
 
 interface ProductDetailPageProps {
   product: Product;
   relatedProducts: Product[];
+  catalog: Product[];
+  reviews: Review[];
+  reviewSummary: ReviewSummary;
 }
 
 const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
   product,
   relatedProducts,
+  catalog,
+  reviews,
+  reviewSummary,
 }) => {
-  const [activeImage, setActiveImage] = useState(0);
-  const [selectedSize, setSelectedSize] = useState<string | null>(null);
+  // header rating follows the reviews section (includes the shopper's own review)
+  const [summary, setSummary] = useState<ReviewSummary>(reviewSummary);
+  const handleSummary = useCallback((s: ReviewSummary) => setSummary(s), []);
 
-  const discount = Math.round(
-    ((product.mrp - product.price) / product.mrp) * 100
-  );
+  const discount = Math.round(((product.mrp - product.price) / product.mrp) * 100);
+  const category = getCategoryConfig(product.category);
+  const sub = category?.subcategories.find((s) => s.slug === product.subcategory);
 
   return (
     <>
-      <section className="product-detail">
-        <div className="product-detail__inner">
-          <div className="product-detail__gallery">
-            <div className="product-detail__main-image">
-              <Image
-                src={product.images[activeImage]}
-                alt={product.name}
-                fill
-                sizes="(max-width: 768px) 100vw, 50vw"
-              />
-            </div>
-            {product.images.length > 1 && (
-              <div className="product-detail__thumbs">
-                {product.images.map((img, i) => (
-                  <button
-                    key={img}
-                    type="button"
-                    className={`product-detail__thumb ${
-                      i === activeImage ? "is-active" : ""
-                    }`}
-                    onClick={() => setActiveImage(i)}
-                  >
-                    <Image src={img} alt="" fill sizes="80px" />
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
+      <Head>
+        <title>{`${product.name} | STYLEVIN`}</title>
+        <meta name="description" content={product.description} />
+      </Head>
 
-          <div className="product-detail__info">
-            <h1 className="product-detail__name">{product.name}</h1>
+      <section className="pd-page">
+        <nav className="pd-page__crumbs" aria-label="Breadcrumb">
+          <Link href="/">Home</Link>
+          <FiChevronRight />
+          <Link href={`/${product.category}`}>{category?.label ?? product.category}</Link>
+          <FiChevronRight />
+          <Link href={`/${product.category}/${product.subcategory}`}>
+            {sub?.label ?? product.subcategory.replace(/-/g, " ")}
+          </Link>
+          <FiChevronRight />
+          <span aria-current="page">{product.name}</span>
+        </nav>
 
-            {product.rating && (
-              <div className="product-detail__rating">
-                ★ {product.rating}{" "}
-                <span>({product.reviewCount} reviews)</span>
-              </div>
-            )}
-
-            <div className="product-detail__price-row">
-              <span className="product-detail__price">₹{product.price}</span>
-              {product.mrp > product.price && (
-                <>
-                  <span className="product-detail__mrp">₹{product.mrp}</span>
-                  <span className="product-detail__discount">
-                    {discount}% OFF
-                  </span>
-                </>
-              )}
-            </div>
-
-            <p className="product-detail__description">
-              {product.description}
-            </p>
-
-            <div className="product-detail__sizes">
-              <p className="product-detail__label">Select Size</p>
-              <div className="product-detail__size-list">
-                {product.variants.map((v) => (
-                  <button
-                    key={v.size}
-                    type="button"
-                    disabled={v.stock === 0}
-                    className={`product-detail__size-btn ${
-                      selectedSize === v.size ? "is-active" : ""
-                    }`}
-                    onClick={() => setSelectedSize(v.size)}
-                  >
-                    {v.size}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            <button type="button" className="product-detail__add-btn">
-              ADD TO CART
-            </button>
-          </div>
+        <div className="pd-page__inner">
+          <ProductGallery
+            productId={product.id}
+            images={product.images}
+            name={product.name}
+            discount={discount}
+          />
+          <ProductInfo
+            product={product}
+            rating={summary.average}
+            reviewCount={summary.total}
+          />
         </div>
       </section>
 
-      {relatedProducts.length > 0 && (
-        <section className="product-detail__related">
-          <div className="product-detail__related-inner">
-            <h2>You May Also Like</h2>
-            <ProductGrid products={relatedProducts} />
-          </div>
-        </section>
-      )}
+      <ProductReviews
+        productId={product.id}
+        sizes={product.variants.map((v) => v.size)}
+        reviews={reviews}
+        summary={reviewSummary}
+        onSummaryChange={handleSummary}
+      />
+
+      <ProductRecommendations
+        product={product}
+        catalog={catalog}
+        fallback={relatedProducts}
+      />
     </>
   );
 };
@@ -135,10 +107,13 @@ export const getStaticProps: GetStaticProps = async (context) => {
     return { notFound: true };
   }
 
-  const relatedProducts = await getRelatedProducts(product);
+  const relatedProducts = await getRelatedProducts(product, 5);
+  const { reviews, summary } = await getProductReviews(product);
+  // used client-side to build "Recommended for You" from browsing history
+  const catalog = dummyProducts.filter((p) => p.id !== product.id);
 
   return {
-    props: { product, relatedProducts },
+    props: { product, relatedProducts, catalog, reviews, reviewSummary: summary },
   };
 };
 

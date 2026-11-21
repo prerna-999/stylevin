@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import {
   UserRound, Package, Heart, LogOut, Mail, Tag, CalendarDays, ArrowRight,
@@ -8,7 +9,7 @@ import {
 
 import Login from "./Login";
 import Signup from "./Signup";
-import { useAuth, clearSession } from "@/lib/auth";
+import { useAuth, clearSession, getRedirectTarget } from "@/lib/auth";
 
 type AuthView = "login" | "signup";
 type Tab = "profile" | "orders" | "wishlist";
@@ -23,6 +24,14 @@ export default function AuthProfile() {
   const [view, setView] = useState<AuthView>("login");
   const [tab, setTab] = useState<Tab>("profile");
   const { user, ready } = useAuth();
+  const router = useRouter();
+
+  // already logged in but sent here with ?redirect=... (e.g. from the cart) -> go straight back
+  useEffect(() => {
+    if (!ready || !user) return;
+    const target = getRedirectTarget();
+    if (target) router.replace(target);
+  }, [ready, user, router]);
 
   if (!ready) {
     return (
@@ -121,9 +130,9 @@ export default function AuthProfile() {
               <h2 className="acc-panel__title">My Orders</h2>
               <div className="acc-empty">
                 <span className="acc-empty__icon"><Package size={30} /></span>
-                <h3>No orders yet</h3>
-                <p>When you place an order, you can track it here.</p>
-                <Link href="/" className="acc-btn">Start Shopping <ArrowRight size={16} /></Link>
+                <h3>Your orders</h3>
+                <p>View all your orders and track their delivery status.</p>
+                <Link href="/track-order" className="acc-btn">Track Orders <ArrowRight size={16} /></Link>
               </div>
             </>
           )}

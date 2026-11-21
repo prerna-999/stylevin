@@ -61,3 +61,22 @@ export function useAuth() {
 
   return { user, ready };
 }
+
+/** Authorization header for calls to the backend API */
+export function authHeaders(): Record<string, string> {
+  const token = getToken();
+  return token ? { Authorization: `Bearer ${token}` } : {};
+}
+
+/**
+ * Reads ?redirect=/some/path from the current URL.
+ * Only same-site paths are accepted (blocks open redirects like //evil.com).
+ */
+export function getRedirectTarget(fallback: string | null = null): string | null {
+  if (typeof window === "undefined") return fallback;
+  const target = new URLSearchParams(window.location.search).get("redirect");
+  if (target && target.startsWith("/") && !target.startsWith("//") && !target.includes("\\")) {
+    return target;
+  }
+  return fallback;
+}

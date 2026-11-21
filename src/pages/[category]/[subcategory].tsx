@@ -12,6 +12,7 @@ interface SubcategoryPageProps {
   categoryConfig: CategoryConfig;
   subcategoryLabel: string;
   initialProducts: Product[];
+  categoryProducts: Product[];
 }
 
 const SubcategoryPage: React.FC<SubcategoryPageProps> = ({
@@ -20,6 +21,7 @@ const SubcategoryPage: React.FC<SubcategoryPageProps> = ({
   subcategory,
   subcategoryLabel,
   initialProducts,
+  categoryProducts,
 }) => {
   return (
     <>
@@ -32,6 +34,7 @@ const SubcategoryPage: React.FC<SubcategoryPageProps> = ({
       <ProductListing
         key={`${category}/${subcategory}`}
         products={initialProducts}
+        priceSource={categoryProducts}
         categoryConfig={categoryConfig}
         activeSubcategory={subcategory}
       />
@@ -66,10 +69,17 @@ export const getStaticProps: GetStaticProps = async (context) => {
     perPage: 100,
   });
 
+  // whole category → keeps the Price filter range usable on every subcategory
+  const { products: categoryProducts } = await getProducts({
+    category,
+    perPage: 100,
+  });
+
   return {
     props: {
       category,
       subcategory,
+      categoryProducts,
       categoryConfig,
       subcategoryLabel: subcategoryConfig.label,
       initialProducts: products,
