@@ -321,6 +321,9 @@ const NewDrop: React.FC = () => {
     // element (add-to-bag, wishlist) — otherwise the drag-scroll logic can
     // swallow the click on quick taps.
     if ((e.target as HTMLElement).closest("button")) return;
+    // Touch / pen: let the browser handle native momentum scrolling.
+    // JS drag is only for mouse (desktop), otherwise it fights the touch scroll and feels laggy.
+    if (e.pointerType !== "mouse") return;
     isDraggingRef.current = true;
     setIsPressing(true);
     draggedRef.current = false;
