@@ -147,6 +147,8 @@ export default function ComboOffers() {
     // a press that starts on the button / link must stay a normal click,
     // otherwise pointer capture swallows it and "Add to Cart" never fires
     if ((e.target as HTMLElement).closest("button, a")) return;
+    // touch screens scroll natively (smooth, with momentum + snapping); JS drag is for the mouse only
+    if (e.pointerType !== "mouse") return;
     isDraggingRef.current = true;
     setIsPressing(true);
     draggedRef.current = false;

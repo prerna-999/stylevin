@@ -1916,3 +1916,52 @@
 
 /* Combo "Add to Cart" is a <button> now */
 button.combo-buy-btn { border: 0; cursor: pointer; font-family: inherit; line-height: normal; }
+
+
+/* ===================== COMBO OFFERS: responsive + smooth touch ===================== */
+.combo-track {
+  touch-action: pan-x pan-y;            /* let the browser handle swipes natively */
+  -webkit-overflow-scrolling: touch;     /* momentum scrolling on iOS */
+  overscroll-behavior-x: contain;        /* don't trigger browser back-swipe at the ends */
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: 2px;
+}
+.combo-track--dragging { scroll-snap-type: none; }
+.combo-slide { scroll-snap-stop: always; }
+.combo-card { -webkit-tap-highlight-color: transparent; }
+
+/* no hover "lift" on touch devices (it sticks after a tap) */
+@media (hover: none) {
+  .combo-card:hover { transform: none; }
+  .combo-buy-btn:hover { transform: none; }
+}
+
+/* tablet: about 2.5 cards visible, the next one peeks in */
+@media (max-width: 1024px) {
+  .combo-section { padding: 48px 0 56px; }
+  .combo-heading { font-size: 40px; }
+  .combo-heading-wrap { margin-bottom: 28px; }
+  .combo-track { gap: 16px; }
+  .combo-slide { width: calc((100% - 32px) / 2.5); min-width: 220px; }
+}
+
+/* mobile: one card plus a peek of the next, so it's obvious it swipes */
+@media (max-width: 640px) {
+  .combo-section { padding: 36px 0 44px; }
+  .combo-heading { font-size: 26px; }
+  .combo-heading-wrap { margin-bottom: 20px; }
+  .combo-track { gap: 12px; padding: 4px 2px 14px; }
+  .combo-slide { width: 74%; min-width: 0; max-width: 300px; }
+  .combo-card { border-radius: 14px; }
+  .combo-badge { top: 10px; left: 10px; font-size: 11px; padding: 4px 9px; }
+  .combo-info { padding: 12px 12px 14px; gap: 8px; }
+  .combo-title { font-size: 14px; }
+  .combo-price { font-size: 16px; }
+  .combo-buy-btn { font-size: 12px; padding: 9px 14px; }
+}
+
+/* very small phones */
+@media (max-width: 360px) {
+  .combo-slide { width: 80%; }
+  .combo-buy-btn { padding: 8px 11px; }
+}
