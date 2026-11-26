@@ -268,6 +268,7 @@ export const dummyProducts: Product[] = [
   {
     id: 13,
     slug: "kids-dino-print-tee",
+    code: "#KZ01",
     name: "Kids Dino Print Cotton T-Shirt",
     description:
       "Soft 100% cotton tee with a playful dinosaur print. Pre-shrunk fabric, machine washable.",
@@ -281,7 +282,7 @@ export const dummyProducts: Product[] = [
       { size: "4-5Y", stock: 14 },
       { size: "6-7Y", stock: 8 },
     ],
-    colors: ["#F2C94C"],
+    colors: ["#F2C94C", "#301311"],
     isNew: true,
     rating: 4.6,
     reviewCount: 34,
@@ -289,6 +290,7 @@ export const dummyProducts: Product[] = [
   {
     id: 14,
     slug: "kids-jogger-set-navy",
+    code: "#KZ02",
     name: "Kids Cotton Jogger Set - Navy",
     description:
       "Two-piece jogger set with an elastic waistband and ribbed cuffs. Soft brushed cotton fleece.",
@@ -302,7 +304,7 @@ export const dummyProducts: Product[] = [
       { size: "5-6Y", stock: 9 },
       { size: "7-8Y", stock: 5 },
     ],
-    colors: ["#243A5E"],
+    colors: ["#243A5E", "#8a8478"],
     rating: 4.5,
     reviewCount: 22,
   },

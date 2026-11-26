@@ -24,9 +24,10 @@
     --color-white: #fff;
     --color-1: #0B0F14;
     --color-2: #E9EDF2;
-    --color-3:#755B0B ;
+    --color-3: #a2acb9;
     --color-4: #a8c6f0;
     --color-black: #000;
+    --color-red: #C1440E;
     --box-shadow: rgba(100, 100, 111, 0.2) 12px 11px 34px 11px;
     --box-shadow-2: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
     --hero-gradient: linear-gradient(135deg,#2F1A0A 0%, #581E0F 100%);

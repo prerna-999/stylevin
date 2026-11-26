@@ -516,8 +516,8 @@
 }
 
 .product-card__wishlist.is-active svg {
-  fill: var(--color-4);
-  stroke: var(--color-4);
+  fill: var(--color-red);
+  stroke: var(--color-red);
 }
 
 .product-card__info {

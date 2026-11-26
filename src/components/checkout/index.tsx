@@ -6,7 +6,7 @@ import { FiPlus, FiEdit2, FiLock, FiTruck, FiCreditCard } from "react-icons/fi";
 import { useCart } from "@/context/CartContext";
 import { useAuth } from "@/lib/auth";
 import {
-  Address, AddressErrors, COUNTRIES, INDIAN_STATES, PAYMENT_METHODS, SHIPPING_METHODS,
+  Address, AddressErrors, INDIAN_STATES, PAYMENT_METHODS, SHIPPING_METHODS,
   PaymentMethodId, ShippingMethodId, createOrder, emptyAddress, fetchAddresses,
   saveAddress, saveOrderSnapshot, sameAddress, shippingCharge, validateAddress,
   FREE_SHIPPING_FROM,
@@ -18,7 +18,7 @@ const lineKey = (i: { id: number; size?: string; color?: string }) => `${i.id}|$
 const CheckoutPage: React.FC = () => {
   const router = useRouter();
   const { user, ready: authReady } = useAuth();
-  const { items, count, subtotal, savings, ready: cartReady } = useCart();
+  const { items, count, subtotal, savings, ready: cartReady, clear } = useCart();
 
   const [saved, setSaved] = useState<Address[]>([]);
   const [loadingAddr, setLoadingAddr] = useState(true);
@@ -28,7 +28,7 @@ const CheckoutPage: React.FC = () => {
   const [original, setOriginal] = useState<Address | null>(null); // address being edited, before changes
   const [errors, setErrors] = useState<AddressErrors>({});
   const [shippingMethod, setShippingMethod] = useState<ShippingMethodId>("standard");
-  const [payment, setPayment] = useState<PaymentMethodId>("online");
+  const [payment, setPayment] = useState<PaymentMethodId | null>(null); // customer must choose
   const [placing, setPlacing] = useState(false);
   const [error, setError] = useState("");
   const formRef = useRef<HTMLDivElement>(null);
@@ -59,7 +59,7 @@ const CheckoutPage: React.FC = () => {
     return () => { alive = false; };
   }, [user]);
 
-  const shipping = shippingCharge(shippingMethod, payment, subtotal);
+  const shipping = shippingCharge(shippingMethod, payment ?? "online", subtotal);
   const total = subtotal + shipping;
   const selected = useMemo(() => saved.find((a) => a.id === selectedId) ?? null, [saved, selectedId]);
   const activeAddress = mode === "form" ? form : selected;
@@ -78,7 +78,8 @@ const CheckoutPage: React.FC = () => {
   };
 
   const startEdit = (a: Address) => {
-    setForm({ ...a, address2: a.address2 ?? "" });
+    // old addresses had separate first/last name: show them together in the single name field
+    setForm({ ...a, country: "India", firstName: `${a.firstName ?? ""} ${a.lastName ?? ""}`.trim(), lastName: "", address2: a.address2 ?? "" });
     setOriginal(a);
     setErrors({});
     setMode("form");
@@ -92,7 +93,11 @@ const CheckoutPage: React.FC = () => {
 
   const placeOrder = async () => {
     setError("");
-    const address = activeAddress;
+    if (!payment) {
+      setError("Please select a payment method to confirm your order.");
+      return;
+    }
+    const address = activeAddress ? { ...activeAddress, country: "India" } : null; // we deliver only in India
     if (!address) {
       setError("Please add a shipping address.");
       return;
@@ -102,11 +107,6 @@ const CheckoutPage: React.FC = () => {
       if (mode === "list" && selected) startEdit(selected);
       setErrors(errs);
       setError("Please fix the highlighted fields.");
-      return;
-    }
-    if (address.country !== "India") {
-      setErrors({ country: "We currently deliver only within India" });
-      setError("We currently deliver only within India.");
       return;
     }
     if (items.length === 0) return;
@@ -132,11 +132,9 @@ const CheckoutPage: React.FC = () => {
         try { await saveAddress(user, address); } catch { /* the order is already placed */ }
       }
 
-      if (result.paymentUrl) {
-        window.location.href = result.paymentUrl; // gateway returns to /order-confirmation
-        return;
-      }
-      router.push(`/order-confirmation?orderId=${encodeURIComponent(result.orderId)}`);
+      // order placed -> empty the cart and go straight to Track Order
+      clear();
+      router.push("/track-order");
     } catch (err: any) {
       setError(err?.message || "Something went wrong. Please try again.");
       setPlacing(false);
@@ -201,12 +199,12 @@ const CheckoutPage: React.FC = () => {
                               onChange={() => setSelectedId(a.id ?? null)}
                             />
                             <span className="co-addr__text">
-                              <b>{a.firstName} {a.lastName}</b>
+                              <b>{`${a.firstName ?? ""} ${a.lastName ?? ""}`.trim()}</b>
                               <span>
                                 {a.address1}{a.address2 ? `, ${a.address2}` : ""}, {a.city}, {a.state} – {a.pin}
                               </span>
                               <span>{a.country} · {a.phone}</span>
-                              <span>{a.email}</span>
+                              {a.email && <span>{a.email}</span>}
                             </span>
                           </label>
                           <button type="button" className="co-link" onClick={() => startEdit(a)}>
@@ -223,24 +221,9 @@ const CheckoutPage: React.FC = () => {
 
                 {mode === "form" && (
                   <div ref={formRef} className="co-form">
-                    <div className="co-field co-span-2">
-                      <label htmlFor="co-country">Country / Region</label>
-                      <select
-                        id="co-country"
-                        className={`co-input ${errors.country ? "has-error" : ""}`}
-                        value={form.country}
-                        onChange={set("country")}
-                      >
-                        {COUNTRIES.map((c) => <option key={c}>{c}</option>)}
-                      </select>
-                      {errors.country && <span className="co-error">{errors.country}</span>}
-                      {form.country !== "India" && !errors.country && (
-                        <span className="co-error">We currently deliver only within India.</span>
-                      )}
+                    <div className="co-span-2">
+                      {field("firstName", "Full name", { autoComplete: "name" })}
                     </div>
-
-                    {field("firstName", "First name", { autoComplete: "given-name" })}
-                    {field("lastName", "Last name", { autoComplete: "family-name" })}
                     <div className="co-span-2">
                       {field("address1", "Address", { autoComplete: "address-line1", placeholder: "Street address" })}
                     </div>
@@ -266,7 +249,7 @@ const CheckoutPage: React.FC = () => {
                     {field("pin", "PIN Code", { inputMode: "numeric", maxLength: 6, autoComplete: "postal-code" })}
                     {field("phone", "Phone number", { type: "tel", inputMode: "tel", autoComplete: "tel", placeholder: "10-digit mobile number" })}
                     <div className="co-span-2">
-                      {field("email", "Email address", { type: "email", autoComplete: "email" })}
+                      {field("email", "Email address", { type: "email", autoComplete: "email" }, true)}
                     </div>
 
                     {saved.length > 0 && (
@@ -287,7 +270,7 @@ const CheckoutPage: React.FC = () => {
             <h2 id="co-method-h"><FiTruck /> Shipping Method</h2>
             <div className="co-options">
               {SHIPPING_METHODS.map((m) => {
-                const price = shippingCharge(m.id, payment, subtotal);
+                const price = shippingCharge(m.id, payment ?? "online", subtotal);
                 return (
                   <label key={m.id} className={`co-option ${shippingMethod === m.id ? "is-active" : ""}`}>
                     <input
@@ -371,17 +354,17 @@ const CheckoutPage: React.FC = () => {
           <div className="co-review">
             <p><b>Deliver to:</b>{" "}
               {activeAddress && activeAddress.address1
-                ? `${activeAddress.firstName} ${activeAddress.lastName}, ${activeAddress.address1}, ${activeAddress.city}, ${activeAddress.state} ${activeAddress.pin}`
+                ? `${`${activeAddress.firstName ?? ""} ${activeAddress.lastName ?? ""}`.trim()}, ${activeAddress.address1}, ${activeAddress.city}, ${activeAddress.state} ${activeAddress.pin}`
                 : "—  add your address"}
             </p>
             <p><b>Shipping:</b> {SHIPPING_METHODS.find((m) => m.id === shippingMethod)?.label}</p>
-            <p><b>Payment:</b> {PAYMENT_METHODS.find((m) => m.id === payment)?.label}</p>
+            <p><b>Payment:</b> {payment ? PAYMENT_METHODS.find((m) => m.id === payment)?.label : "Select a payment method"}</p>
           </div>
 
           {error && <p className="co-error co-error--block" role="alert">{error}</p>}
 
-          <button type="button" className="cart-place-order" onClick={placeOrder} disabled={placing || loadingAddr}>
-            {placing ? "Placing order…" : payment === "online" ? `Pay ${rupee(total)}` : "Place Order"}
+          <button type="button" className="cart-place-order" onClick={placeOrder} disabled={placing || loadingAddr || !payment}>
+            {placing ? "Placing order…" : "Confirm Order"}
           </button>
           <Link href="/cart" className="co-back">← Back to cart</Link>
         </aside>

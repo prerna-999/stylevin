@@ -238,7 +238,7 @@ export default function Login({ onSwitchToSignup }: LoginProps) {
     try {
       const idToken = await confirmFirebaseOtp(confirmation.current, otp);
       const data = await post("/auth/firebase/login", { idToken, remember });
-      saveSession(data.token, data.user, remember);
+      saveSession(data.token, { ...data.user, phone: data.user?.phone || phone }, remember);
       router.replace(getRedirectTarget("/") as string);
     } catch (err: any) {
       setError(err.code ? firebaseErrorMessage(err) : err.message || "Could not reach the server");
@@ -250,9 +250,8 @@ export default function Login({ onSwitchToSignup }: LoginProps) {
   return (
     <div className="login-split-card">
       <div className="login-split-banner">
-        <img className="login-split-banner-image" src="/images/login-banner.jpg" alt="" />
-        <div className="login-split-banner-overlay" />
-        <img className="login-split-banner-logo" src="/images/login-logo.png" alt="Simcocart" />
+        <img className="login-split-banner-image" src="/assets/img/all-images/profile/lgoin.png" alt="" />
+        {/* <div className="login-split-banner-overlay" />
         <div className="login-split-banner-content">
           <div className="login-split-banner-eyebrow">
             <span className="login-split-banner-eyebrow-line" />
@@ -262,7 +261,7 @@ export default function Login({ onSwitchToSignup }: LoginProps) {
             SHOP WHAT
             <span className="login-split-banner-heading-accent">YOU LOVE.</span>
           </h2>
-        </div>
+        </div> */}
       </div>
 
       <div className="login-modern-card">
@@ -330,7 +329,7 @@ export default function Login({ onSwitchToSignup }: LoginProps) {
         {step === "phone" && (
           <>
             <p className="login-modern-terms">
-              By continuing you agree to our <a href="/terms-and-conditions">Terms &amp; Conditions</a> and <a href="/privacy-policy">Privacy Policy</a>.
+              By continuing you agree to our <a href="/terms-and-condition">Terms &amp; Conditions</a> and <a href="/privacy-policy">Privacy Policy</a>.
             </p>
 
             <p className="login-modern-switch-text">

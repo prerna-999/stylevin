@@ -247,7 +247,12 @@ export default function Signup({ onSwitchToLogin }: SignupProps) {
         name,
         ...(email ? { email } : {}),
       });
-      saveSession(data.token, data.user, true);
+      // keep name / phone / email from signup so checkout can pre-fill them
+      saveSession(
+        data.token,
+        { ...data.user, name: data.user?.name || name, phone: data.user?.phone || phone, email: data.user?.email || email },
+        true
+      );
       router.replace(getRedirectTarget("/") as string);
     } catch (err: any) {
       setError(err.code ? firebaseErrorMessage(err) : err.message || "Could not reach the server");
@@ -259,8 +264,8 @@ export default function Signup({ onSwitchToLogin }: SignupProps) {
   return (
     <div className="login-split-card">
       <div className="login-split-banner">
-        <img className="login-split-banner-image" src="/images/login-banner.jpg" alt="" />
-        <div className="login-split-banner-overlay" />
+        <img className="login-split-banner-image" src="/assets/img/all-images/profile/lgoin.png" alt="" />
+        {/* <div className="login-split-banner-overlay" />
         <img className="login-split-banner-logo" src="/images/login-logo.png" alt="Simcocart" />
         <div className="login-split-banner-content">
           <div className="login-split-banner-eyebrow">
@@ -271,7 +276,7 @@ export default function Signup({ onSwitchToLogin }: SignupProps) {
             SHOP WHAT
             <span className="login-split-banner-heading-accent">YOU LOVE.</span>
           </h2>
-        </div>
+        </div> */}
       </div>
 
       <div className="login-modern-card">

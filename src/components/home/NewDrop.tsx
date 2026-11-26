@@ -279,11 +279,62 @@ const WOMEN_PRODUCTS: Product[] = [
   },
 ];
 
+const kidsSizeRun = (unavailable: string[] = []): SizeOption[] =>
+  ["2-3Y", "4-5Y", "6-7Y", "8-9Y", "10-11Y"].map((label) => ({
+    label,
+    available: !unavailable.includes(label),
+  }));
+
+const KIDS_PRODUCTS: Product[] = [
+  {
+    id: "kz01",
+    code: "#KZ01",
+    name: "Kids Dino Print Cotton T-Shirt",
+    price: 499,
+    variants: [
+      {
+        name: "Sunshine Yellow",
+        hex: "#F2C94C",
+        image: "https://picsum.photos/seed/ktee1/700/910",
+        sizes: kidsSizeRun(["10-11Y"]),
+      },
+      {
+        name: "Coffee Bean",
+        hex: "#301311",
+        // TODO: replace with the actual Coffee Bean product photo when available
+        image: "https://picsum.photos/seed/ktee1/700/910",
+        sizes: kidsSizeRun(["2-3Y", "10-11Y"]),
+      },
+    ],
+  },
+  {
+    id: "kz02",
+    code: "#KZ02",
+    name: "Kids Cotton Jogger Set",
+    price: 899,
+    variants: [
+      {
+        name: "Navy",
+        hex: "#243A5E",
+        image: "https://picsum.photos/seed/kjogger1/700/910",
+        sizes: kidsSizeRun(),
+      },
+      {
+        name: "Moon Rock",
+        hex: "#8a8478",
+        // TODO: replace with the actual Moon Rock product photo when available
+        image: "https://picsum.photos/seed/kjogger1/700/910",
+        sizes: kidsSizeRun(["2-3Y", "4-5Y"]),
+      },
+    ],
+  },
+];
+
 const formatPrice = (value: number) =>
   `₹${value.toLocaleString("en-IN", { minimumFractionDigits: 2 })}`;
 
 const NewDrop: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<"men" | "women">("men");
+  const [activeTab, setActiveTab] = useState<"men" | "women" | "kids">("men");
   const { has: isSaved, toggle: toggleSaved } = useWishlist();
   const { addItem, isInCart } = useCart();
   const router = useRouter();
@@ -301,10 +352,11 @@ const NewDrop: React.FC = () => {
   const [sizeError, setSizeError] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
-  const products = useMemo(
-    () => (activeTab === "men" ? MEN_PRODUCTS : WOMEN_PRODUCTS),
-    [activeTab]
-  );
+  const products = useMemo(() => {
+    if (activeTab === "men") return MEN_PRODUCTS;
+    if (activeTab === "women") return WOMEN_PRODUCTS;
+    return KIDS_PRODUCTS;
+  }, [activeTab]);
 
   const scrollByStep = useCallback((direction: 1 | -1) => {
     const track = trackRef.current;
@@ -479,6 +531,15 @@ const NewDrop: React.FC = () => {
             onClick={() => setActiveTab("women")}
           >
             Women
+          </button>
+          <button
+            type="button"
+            role="tab"
+            aria-selected={activeTab === "kids"}
+            className={`new-drop__tab${activeTab === "kids" ? " new-drop__tab--active" : ""}`}
+            onClick={() => setActiveTab("kids")}
+          >
+            Kids
           </button>
         </div>
 

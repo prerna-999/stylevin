@@ -202,7 +202,7 @@
 }
 
 .login-modern-checkbox a {
-  color: var(--primary-color);
+  color: var(--color-red);
   text-decoration: underline;
 }
 
@@ -283,20 +283,22 @@
 .login-modern-terms {
   margin: 20px 0 16px;
   text-align: center;
-  font-size: 11px;
+  font-size: 12px;
   color: var(--text-color);
 }
 
 .login-modern-terms a {
-  color: var(--primary-color);
+  color: var(--color-red);
   text-decoration: underline;
+
 }
 
 .login-modern-switch-text {
   margin: 0;
   text-align: center;
-  font-size: 13px;
+  font-size: 15px;
   color: var(--text-color);
+  margin-top: 20px;
 }
 
 .login-modern-switch-btn {
@@ -476,3 +478,5 @@
     font-size: 18px;
   }
 }
+
+

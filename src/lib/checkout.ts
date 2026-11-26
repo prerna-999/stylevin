@@ -45,8 +45,8 @@ export const SHIPPING_METHODS: ShippingMethod[] = [
 ];
 
 export const PAYMENT_METHODS: { id: PaymentMethodId; label: string; desc: string }[] = [
-  { id: "online", label: "Pay Online", desc: "UPI, Cards, Net Banking, Wallets" },
-  { id: "cod", label: "Cash on Delivery", desc: "Pay when your order arrives" },
+  { id: "online", label: "UPI", desc: "Pay using any UPI app (Google Pay, PhonePe, Paytm, BHIM)" },
+  { id: "cod", label: "Cash on Delivery (COD)", desc: "Pay when your order arrives" },
 ];
 
 /** shipping charge: standard is free on prepaid orders >= ₹999, flat ₹79 otherwise; express is ₹149 */
@@ -229,6 +229,18 @@ export async function createOrder(payload: {
       shippingAddress: payload.address,
       shippingMethod: payload.shippingMethod,
       paymentMethod: payload.paymentMethod,
+      // fields the order API validates (COD | ONLINE and flat ship* address)
+      ...({
+        paymentMethod: payload.paymentMethod === "cod" ? "COD" : "ONLINE",
+        shipName: `${payload.address.firstName} ${payload.address.lastName}`.trim(),
+        shipLine1: payload.address.address1,
+        shipLine2: payload.address.address2 || undefined,
+        shipCity: payload.address.city,
+        shipState: payload.address.state,
+        shipPincode: payload.address.pin,
+        shipPhone: payload.address.phone.replace(/[\s-]/g, "").replace(/^(\+91|0)/, ""),
+        shipEmail: payload.address.email,
+      }),
       subtotal: payload.totals.subtotal,
       discount: payload.totals.savings,
       shippingCharge: payload.totals.shipping,

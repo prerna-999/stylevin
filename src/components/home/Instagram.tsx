@@ -109,7 +109,7 @@ const Instagram: React.FC = () => {
   }, []);
 
   return (
-    <section className="instagram-section pt-80" aria-label="JKY Groove on Instagram">
+    <section className="instagram-section pt-30" aria-label="JKY Groove on Instagram">
       <div className="instagram-section__inner">
         <header className="instagram-section__header">
           <span className="instagram-section__eyebrow">Stylevin</span>
