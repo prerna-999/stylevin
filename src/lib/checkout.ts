@@ -228,7 +228,7 @@ export async function createOrder(payload: {
       })),
       shippingAddress: payload.address,
       shippingMethod: payload.shippingMethod,
-      paymentMethod: payload.paymentMethod,
+      // paymentMethod: payload.paymentMethod,
       // fields the order API validates (COD | ONLINE and flat ship* address)
       ...({
         paymentMethod: payload.paymentMethod === "cod" ? "COD" : "ONLINE",
