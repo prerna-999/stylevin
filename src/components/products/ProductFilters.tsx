@@ -50,9 +50,9 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({
         )}
       </button>
 
-      <span className="product-filters__count">
+      {/* <span className="product-filters__count">
         {resultCount} {resultCount === 1 ? unitLabel[0] : unitLabel[1]}
-      </span>
+      </span> */}
     </div>
   );
 };
