@@ -39,9 +39,9 @@ const moreInfoLinks: FooterLink[] = [
 ];
 
 const categoryLinks: FooterLink[] = [
-  { url: '/category/men/', name: 'Men Clothing' },
-  { url: '/category/women/', name: 'Women Clothing' },
-  { url: '/category/kids/', name: 'Kid Clothing' },
+  { url: '/men/', name: 'Men Clothing' },
+  { url: '/women/', name: 'Women Clothing' },
+  { url: '/kids/', name: 'Kid Clothing' },
   { url: '/combo-offers/', name: 'Combo Offers' },
 ];
 
