@@ -98,3 +98,13 @@ export function getPriceBounds(products: Product[]): {
 /* ---------- helpers ---------- */
 export const inStockSizes = (p: Product): string[] =>
   p.variants.filter((v) => v.stock > 0).map((v) => v.size);
+
+
+/* ---------- trending ---------- */
+/** Up to `limit` trending products: flagged `isTrending` first, then the most popular (reviews, rating) to fill the rest. */
+export function getTrendingProducts(products: Product[], limit = 10): Product[] {
+  const score = (p: Product) => (p.reviewCount ?? 0) * 10 + (p.rating ?? 0);
+  const flagged = products.filter((p) => p.isTrending).sort((a, b) => score(b) - score(a));
+  const rest = products.filter((p) => !p.isTrending).sort((a, b) => score(b) - score(a));
+  return [...flagged, ...rest].slice(0, limit);
+}

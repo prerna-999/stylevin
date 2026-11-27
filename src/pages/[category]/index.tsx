@@ -26,6 +26,7 @@ const CategoryPage: React.FC<CategoryPageProps> = ({
         key={category}
         products={initialProducts}
         categoryConfig={categoryConfig}
+        showTrending
       />
     </>
   );

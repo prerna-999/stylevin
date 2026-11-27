@@ -7,6 +7,7 @@ import {
   getColorOptions,
   getPriceBounds,
   getSizeOptions,
+  getTrendingProducts,
   sortProducts,
 } from "@/lib/products/listing";
 import CategoryPills from "./CategoryPills";
@@ -22,6 +23,8 @@ interface ProductListingProps {
   categoryConfig: CategoryConfig;
   activeSubcategory?: string;
   pageSize?: number;
+  /** parent-category pages only (/men, /women, /kids…): shows a "Trending Now" block under the filter bar */
+  showTrending?: boolean;
 }
 
 const ProductListing: React.FC<ProductListingProps> = ({
@@ -30,6 +33,7 @@ const ProductListing: React.FC<ProductListingProps> = ({
   categoryConfig,
   activeSubcategory,
   pageSize = 12,
+  showTrending = false,
 }) => {
   const topRef = useRef<HTMLDivElement>(null);
 
@@ -62,6 +66,12 @@ const ProductListing: React.FC<ProductListingProps> = ({
       ),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [products, sizes, colors, priceRange[0], priceRange[1], sort]
+  );
+
+  /* ---------- trending: 10 products of this category (2 rows × 5) ---------- */
+  const trending = useMemo(
+    () => (showTrending ? getTrendingProducts(products, 10) : []),
+    [showTrending, products]
   );
 
   /* ---------- pagination ---------- */
@@ -155,6 +165,21 @@ const ProductListing: React.FC<ProductListingProps> = ({
                 onOpenFilters={() => setDrawerOpen(true)}
               />
             </div>
+
+            {trending.length > 0 && activeCount === 0 && (
+              <div className="product-trending">
+                <h2 className="product-trending__title">
+                  Trending Now
+                </h2>
+                <ProductGrid products={trending} />
+              </div>
+            )}
+
+            {trending.length > 0 && activeCount === 0 && (
+              <h2 className="product-trending__title product-trending__title--all">
+                All Products
+              </h2>
+            )}
 
             <ProductGrid
               products={visible}

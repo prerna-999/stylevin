@@ -1349,3 +1349,33 @@
 }
 .product-listing__toolbar{margin-top:-30px}
 }
+
+/* ---------- Trending Now (parent category pages) ---------- */
+.product-trending {
+  margin-bottom: 36px;
+}
+
+.product-trending__title {
+  font-family: var(--font-family);
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--primary-color);
+  margin: 0 0 16px;
+}
+
+.product-trending__title span {
+  color: var(--color-2);
+}
+
+.product-trending__title--all {
+  margin-top: 8px;
+}
+
+@media (max-width: 767px) {
+  .product-trending {
+    margin-bottom: 28px;
+  }
+  .product-trending__title {
+    font-size: 20px;
+  }
+}
