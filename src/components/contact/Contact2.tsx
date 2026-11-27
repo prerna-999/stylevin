@@ -42,7 +42,7 @@ const contactOptions: ContactOption[] = [
     title: 'Track Your Order',
     desc: "Already ordered? Check exactly where it's at, live.",
     linkLabel: 'Track Order',
-    linkHref: '#track',
+    linkHref: 'track-order',
   },
 ];
 

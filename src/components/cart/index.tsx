@@ -16,11 +16,28 @@ import { getColorName } from "@/lib/colors";
 import { Product } from "@/types/product";
 // import CartBanner from "./CartBanner";
 import VariantModal, { VariantModalMode } from "./VariantModal";
+import ComboVariantModal from "./ComboVariantModal";
+import { getComboItems, comboHrefById } from "@/lib/combos";
 
 const rupee = (n: number) => `₹${n.toLocaleString("en-IN")}`;
 
 /** orders at or above this amount ship free (matches the product page copy) */
 const FREE_SHIPPING_FROM = 999;
+
+/** combos are not in the catalog, so rebuild a minimal product from the cart line */
+const comboProduct = (i: CartItem): Product => ({
+  id: i.id,
+  slug: i.slug,
+  name: i.name,
+  description: i.name,
+  category: "combo",
+  subcategory: "combo",
+  price: i.price,
+  mrp: i.mrp,
+  images: [i.image],
+  variants: [],
+  colors: [],
+});
 
 const lineKey = (i: CartItem) => `${i.id}|${i.size ?? ""}|${i.color ?? ""}`;
 
@@ -28,6 +45,8 @@ interface ModalState {
   mode: VariantModalMode;
   item: CartItem;
   product: Product;
+  /** set for combo lines (Hoodie + Joggers ...) -> opens the per-item picker */
+  combo?: boolean;
 }
 
 const CartPage: React.FC = () => {
@@ -133,14 +152,20 @@ const CartPage: React.FC = () => {
                 const max = item.maxQty ?? MAX_QTY_PER_LINE;
                 const colorName = item.colorName ?? getColorName(item.color);
                 const lineTotal = item.price * item.qty;
-                const canEdit = !!product;
-                const open = (mode: VariantModalMode) =>
-                  product && setModal({ mode, item, product });
+                const comboItems = getComboItems(item.id);
+                const itemHref = item.slug.startsWith("combo-")
+                  ? comboHrefById(item.id)
+                  : `/product/${item.slug}`;
+                const canEdit = !!product || !!comboItems;
+                const open = (mode: VariantModalMode) => {
+                  if (product) setModal({ mode, item, product });
+                  else if (comboItems) setModal({ mode, item, product: comboProduct(item), combo: true });
+                };
 
                 return (
                   <li key={lineKey(item)} className="cart-item">
                     <Link
-                      href={item.slug.startsWith("combo-") ? "/#combo-offers" : `/product/${item.slug}`}
+                      href={itemHref}
                       className="cart-item__image"
                     >
                       <Image
@@ -153,7 +178,7 @@ const CartPage: React.FC = () => {
 
                     <div className="cart-item__body">
                       <Link
-                        href={item.slug.startsWith("combo-") ? "/#combo-offers" : `/product/${item.slug}`}
+                        href={itemHref}
                         className="cart-item__name"
                       >
                         {item.name}
@@ -337,7 +362,36 @@ const CartPage: React.FC = () => {
         </div>
       </div>
 
-      {modal && (
+      {modal && modal.combo && (
+        <ComboVariantModal
+          key={`${modal.mode}|${lineKey(modal.item)}`}
+          mode={modal.mode}
+          title={modal.item.name}
+          items={getComboItems(modal.item.id) ?? []}
+          initialSize={modal.item.size}
+          initialColorName={modal.item.colorName}
+          qtyInCart={(size, color) =>
+            items.find(
+              (i) => i.id === modal.item.id && i.size === size && i.color === color
+            )?.qty ?? 0
+          }
+          onClose={() => setModal(null)}
+          onConfirm={({ size, color, colorName }) => {
+            if (modal.mode === "change") {
+              changeVariant(
+                modal.product,
+                { size: modal.item.size, color: modal.item.color },
+                { size, color, colorName }
+              );
+            } else {
+              addItem(modal.product, { size, color, colorName, image: modal.item.image });
+            }
+            setModal(null);
+          }}
+        />
+      )}
+
+      {modal && !modal.combo && (
         <VariantModal
           key={`${modal.mode}|${lineKey(modal.item)}`}
           mode={modal.mode}

@@ -1,0 +1,93 @@
+/* ---------- combo offers: listing + single combo page ---------- */
+
+/* the card's "Select Options" is a link, not a button */
+.combo-card__select {
+  text-decoration: none;
+}
+
+.combo-card__select:hover {
+  text-decoration: none;
+}
+
+/* single combo page */
+.combo-pd__includes {
+  margin: 0 0 18px;
+  font-size: 14px;
+  color: var(--text-color);
+}
+
+.combo-pd__includes strong {
+  color: var(--primary-color);
+}
+
+.combo-pd__item {
+  margin-bottom: 18px;
+  padding: 14px 16px 6px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+}
+
+.combo-pd__item-title {
+  margin: 0 0 10px;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--primary-color);
+}
+
+/* home carousel: image / title are links to the combo page */
+.combo-image-link,
+.combo-title-link {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+}
+
+.combo-image-link {
+  position: relative;
+}
+
+.combo-view-all {
+  display: flex;
+  justify-content: center;
+  margin-top: 28px;
+}
+
+.combo-view-all__btn {
+  display: inline-block;
+  padding: 12px 28px;
+  border: 1px solid var(--primary-color);
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--primary-color);
+  text-decoration: none;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.combo-view-all__btn:hover {
+  background: var(--primary-color);
+  color: var(--color-white);
+}
+
+/* "More Combo Offers" heading: title on the left, button on the right */
+.combo-recs__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.combo-recs__head .combo-view-all__btn {
+  flex-shrink: 0;
+  padding: 10px 22px;
+  white-space: nowrap;
+}
+
+@media (max-width: 480px) {
+  .combo-recs__head .combo-view-all__btn {
+    padding: 8px 14px;
+    font-size: 13px;
+  }
+}

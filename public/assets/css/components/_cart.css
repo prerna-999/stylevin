@@ -608,3 +608,21 @@
 }
 .cart-place-order:disabled { opacity: 0.5; cursor: not-allowed; }
 .cart-place-order__note { margin-top: 10px; text-align: center; }
+
+/* combo modal: one block per item (Hoodie / Joggers ...) */
+.cart-modal__group {
+  margin-bottom: 8px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--border-color, #e5e5e5);
+}
+
+.cart-modal__group:last-of-type {
+  border-bottom: 0;
+}
+
+.cart-modal__group-title {
+  margin: 0 0 10px;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--primary-color);
+}

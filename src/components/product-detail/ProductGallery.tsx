@@ -17,6 +17,8 @@ interface ProductGalleryProps {
   images: string[];
   name: string;
   discount?: number;
+  /** hide the heart (combos are not wishlist items) */
+  showWishlist?: boolean;
 }
 
 /** Shopify CDN images accept width/height params — ask for a bigger file for zoom. */
@@ -37,6 +39,7 @@ const ProductGallery: React.FC<ProductGalleryProps> = ({
   images,
   name,
   discount = 0,
+  showWishlist = true,
 }) => {
   const { has, toggle } = useWishlist();
   const wished = has(productId);
@@ -187,15 +190,17 @@ const ProductGallery: React.FC<ProductGalleryProps> = ({
           </span>
         </div>
 
-        <button
-          type="button"
-          className={`pd-gallery__wish ${wished ? "is-active" : ""}`}
-          aria-label={wished ? "Remove from saved items" : "Save for later"}
-          aria-pressed={wished}
-          onClick={() => toggle(productId)}
-        >
-          <FiHeart />
-        </button>
+        {showWishlist && (
+          <button
+            type="button"
+            className={`pd-gallery__wish ${wished ? "is-active" : ""}`}
+            aria-label={wished ? "Remove from saved items" : "Save for later"}
+            aria-pressed={wished}
+            onClick={() => toggle(productId)}
+          >
+            <FiHeart />
+          </button>
+        )}
 
         <button
           type="button"

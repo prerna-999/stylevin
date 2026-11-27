@@ -39,12 +39,10 @@ const moreInfoLinks: FooterLink[] = [
 ];
 
 const categoryLinks: FooterLink[] = [
-  { url: '/category/men-clothing/', name: 'Men Clothing' },
-  { url: '/category/women-clothing/', name: 'Women Clothing' },
-  { url: '/category/kid-clothing/', name: 'Kid Clothing' },
-  { url: '/category/accessories/', name: 'Accessories' },
-  { url: '/category/over-sized-t-shirt/', name: 'Over sized T-Shirt' },
-  { url: '/category/zodiac-sign-t-shirt/', name: 'Zodiac Sign T-Shirt' },
+  { url: '/category/men/', name: 'Men Clothing' },
+  { url: '/category/women/', name: 'Women Clothing' },
+  { url: '/category/kids/', name: 'Kid Clothing' },
+  { url: '/combo-offers/', name: 'Combo Offers' },
 ];
 
 // const socialLinks: SocialLink[] = [

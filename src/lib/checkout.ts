@@ -3,9 +3,9 @@ import type { CartItem } from "@/context/CartContext";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
-/* ------------------------------------------------------------------ */
-/* constants                                                           */
-/* ------------------------------------------------------------------ */
+
+/* constants   */
+
 
 export const FREE_SHIPPING_FROM = 999;
 
@@ -59,9 +59,9 @@ export function shippingCharge(
   return payment === "online" && subtotal >= FREE_SHIPPING_FROM ? 0 : 79;
 }
 
-/* ------------------------------------------------------------------ */
-/* address                                                             */
-/* ------------------------------------------------------------------ */
+
+/* address     */
+
 
 export interface Address {
   id?: string | number;
@@ -116,9 +116,9 @@ const sameAddress = (a: Address, b: Address) =>
     .every((k) => (a[k] || "").toString().trim() === (b[k] || "").toString().trim());
 export { sameAddress };
 
-/* ------------------------------------------------------------------ */
+
 /* address storage: backend first, per-account localStorage fallback   */
-/* ------------------------------------------------------------------ */
+
 
 const localKey = (user: AuthUser) => `stylevin_addresses_${user.id}`;
 
@@ -184,9 +184,9 @@ export async function saveAddress(user: AuthUser, addr: Address): Promise<Addres
   return next;
 }
 
-/* ------------------------------------------------------------------ */
-/* order                                                               */
-/* ------------------------------------------------------------------ */
+
+/* order       */
+
 
 export interface OrderTotals {
   subtotal: number;

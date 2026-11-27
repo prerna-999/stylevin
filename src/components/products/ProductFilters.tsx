@@ -1,25 +1,41 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { FiSliders } from "react-icons/fi";
-import { SORT_OPTIONS, SortValue } from "@/lib/products/listing";
 
 interface ProductFiltersProps {
-  sort: SortValue;
-  onSortChange: (sort: SortValue) => void;
   resultCount: number;
   activeFilterCount: number;
   onOpenFilters: () => void; // opens the sidebar drawer on tablet / mobile
+  /** [singular, plural] word after the count, default product / products */
+  unitLabel?: [string, string];
 }
 
-/** Top toolbar: mobile "Filters" button · result count · sort dropdown */
+/** Top toolbar: mobile "Filters" button · result count */
 const ProductFilters: React.FC<ProductFiltersProps> = ({
-  sort,
-  onSortChange,
   resultCount,
   activeFilterCount,
   onOpenFilters,
+  unitLabel = ["product", "products"],
 }) => {
+  const rootRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const toolbar = rootRef.current?.parentElement;
+    if (!toolbar) return;
+    const update = () =>
+      toolbar.classList.toggle(
+        "is-stuck",
+        toolbar.getBoundingClientRect().top < 1
+      );
+    update();
+    window.addEventListener("scroll", update, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", update);
+      toolbar.classList.remove("is-stuck");
+    };
+  }, []);
+
   return (
-    <div className="product-filters">
+    <div className="product-filters" ref={rootRef}>
       <button
         type="button"
         className="product-filters__toggle"
@@ -35,23 +51,8 @@ const ProductFilters: React.FC<ProductFiltersProps> = ({
       </button>
 
       <span className="product-filters__count">
-        {resultCount} {resultCount === 1 ? "product" : "products"}
+        {resultCount} {resultCount === 1 ? unitLabel[0] : unitLabel[1]}
       </span>
-
-      <label className="product-filters__sort-wrap">
-        <span className="product-filters__sort-label">Sort by</span>
-        <select
-          className="product-filters__sort"
-          value={sort}
-          onChange={(e) => onSortChange(e.target.value as SortValue)}
-        >
-          {SORT_OPTIONS.map((opt) => (
-            <option key={opt.value} value={opt.value}>
-              {opt.label}
-            </option>
-          ))}
-        </select>
-      </label>
     </div>
   );
 };

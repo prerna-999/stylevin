@@ -233,7 +233,7 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { CATEGORIES } from "@/lib/categories";
 
-interface BannerSlide {
+export interface BannerSlide {
   id: string;
   href: string;
   desktopImg: string;
@@ -272,13 +272,22 @@ const normalizeHref = (href: string) =>
   /^(https?:)?\/\//.test(href) || href.startsWith("/") ? href : `/${href}`;
 
 interface CategoryBannerSliderProps {
-  category: string;
+  category?: string;
   activeSubcategory?: string;
+  /** own slides (e.g. the combo-offers page) instead of the category's sub-categories */
+  slides?: BannerSlide[];
+  /** id of the slide to start on when `slides` is given */
+  activeSlideId?: string;
+  /** aria-label of the slider when `slides` is given */
+  label?: string;
 }
 
 const CategoryBannerSlider: React.FC<CategoryBannerSliderProps> = ({
-  category,
+  category = "",
   activeSubcategory,
+  slides: customSlides,
+  activeSlideId,
+  label,
 }) => {
   const config = SLIDER_CATEGORIES.includes(category)
     ? CATEGORIES.find((c) => c.slug === category)
@@ -302,7 +311,7 @@ const CategoryBannerSlider: React.FC<CategoryBannerSliderProps> = ({
     };
   };
 
-  const slides: BannerSlide[] = config
+  const slides: BannerSlide[] = customSlides ?? (config
     ? [
       buildSlide(category, `All ${config.label}`, `/${category}`, category),
       ...config.subcategories.map((s) =>
@@ -314,12 +323,14 @@ const CategoryBannerSlider: React.FC<CategoryBannerSliderProps> = ({
         )
       ),
     ]
-    : [];
+    : []);
 
   const total = slides.length;
   const startIndex = Math.max(
     0,
-    slides.findIndex((s) => s.id === `${category}/${activeSubcategory}`)
+    slides.findIndex((s) =>
+      s.id === (customSlides ? activeSlideId : `${category}/${activeSubcategory}`)
+    )
   );
 
   const [activeIndex, setActiveIndex] = useState(startIndex);
@@ -356,7 +367,7 @@ const CategoryBannerSlider: React.FC<CategoryBannerSliderProps> = ({
   return (
     <section
       className="category-banner-slider"
-      aria-label={`${config?.label} category banners`}
+      aria-label={`${label ?? config?.label} category banners`}
       onMouseEnter={stop}
       onMouseLeave={start}
     >

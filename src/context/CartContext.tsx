@@ -57,7 +57,7 @@ interface CartContextValue {
   changeVariant: (
     product: Product,
     from: { size?: string; color?: string },
-    to: { size?: string; color?: string }
+    to: { size?: string; color?: string; colorName?: string }
   ) => void;
   clear: () => void;
   /** is this product (optionally this exact size / colour) in the cart? */
@@ -176,7 +176,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({
     (
       product: Product,
       from: { size?: string; color?: string },
-      to: { size?: string; color?: string }
+      to: { size?: string; color?: string; colorName?: string }
     ) => {
       const stock = product.variants.find((v) => v.size === to.size)?.stock;
       const maxQty = Math.min(stock ?? MAX_QTY_PER_LINE, MAX_QTY_PER_LINE);
@@ -200,7 +200,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({
                 ...i,
                 size: to.size,
                 color: to.color,
-                colorName: getColorName(to.color),
+                colorName: to.colorName ?? getColorName(to.color),
                 qty: Math.min(i.qty, maxQty),
                 maxQty,
               }

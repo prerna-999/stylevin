@@ -2064,3 +2064,74 @@ button.combo-buy-btn { border: 0; cursor: pointer; font-family: inherit; line-he
   .combo-slide { width: 80%; }
   .combo-buy-btn { padding: 8px 11px; }
 }
+
+
+/* ===================== COMBO OFFERS: cart icon + picker modal ===================== */
+.combo-cart-btn {
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: var(--primary-color);
+  color: var(--color-white);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease, transform 0.15s ease;
+}
+
+.combo-cart-btn:hover {
+  background: var(--color-4);
+  color: var(--primary-color);
+  transform: scale(1.06);
+}
+
+.quick-add__price s {
+  margin-left: 10px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-color);
+}
+
+.quick-add__group {
+  margin-bottom: 18px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid rgba(48, 19, 17, 0.1);
+}
+
+.quick-add__group-title {
+  margin: 0 0 12px;
+  color: var(--primary-color);
+  font-family: var(--font-family);
+  font-size: 15px;
+  font-weight: 800;
+}
+
+.quick-add__group .quick-add__section {
+  margin-bottom: 14px;
+}
+
+.quick-add__details--combo .quick-add__error {
+  display: block;
+  margin: 0 0 4px;
+}
+
+@media (min-width: 721px) {
+  .quick-add__details--combo .quick-add__price {
+    margin-bottom: 14px;
+  }
+
+  .quick-add__details--combo .quick-add__confirm {
+    margin-top: 12px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .combo-cart-btn {
+    width: 40px;
+    height: 40px;
+  }
+}

@@ -143,21 +143,18 @@ const ProductListing: React.FC<ProductListingProps> = ({
           />
 
           <div className="product-listing__main">
-            <CategoryPills
-              categoryConfig={categoryConfig}
-              activeSubcategory={activeSubcategory}
-            />
+            <div className="product-listing__toolbar">
+              <CategoryPills
+                categoryConfig={categoryConfig}
+                activeSubcategory={activeSubcategory}
+              />
 
-            <ProductFilters
-              sort={sort}
-              onSortChange={(s) => {
-                setSort(s);
-                setPage(1);
-              }}
-              resultCount={results.length}
-              activeFilterCount={activeCount}
-              onOpenFilters={() => setDrawerOpen(true)}
-            />
+              <ProductFilters
+                resultCount={results.length}
+                activeFilterCount={activeCount}
+                onOpenFilters={() => setDrawerOpen(true)}
+              />
+            </div>
 
             <ProductGrid
               products={visible}

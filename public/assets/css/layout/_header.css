@@ -79,11 +79,13 @@
 }
 
 .stylevin-header .nav-link {
+  position: relative;
   display: inline-flex !important;
   flex-direction: row !important;
   flex-wrap: nowrap !important;
   align-items: center !important;
   gap: 4px;
+  padding-bottom: 6px;
   white-space: nowrap;
   font-size: 15px;
   font-weight: 600;
@@ -91,6 +93,24 @@
   letter-spacing: 0.03em;
   color: var( --color-white);
   text-decoration: none;
+}
+
+.stylevin-header .nav-link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  background: var(--color-white);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.25s ease;
+}
+
+.stylevin-header .nav-link.active::after,
+.stylevin-header .nav-link:hover::after {
+  transform: scaleX(1);
 }
 
 .stylevin-header .nav-link .nav-label {

@@ -5,8 +5,19 @@ import { CategoryConfig } from "@/lib/categories";
 import { SORT_OPTIONS, SortValue } from "@/lib/products/listing";
 
 interface ProductSidebarProps {
-  categoryConfig: CategoryConfig;
+  categoryConfig?: CategoryConfig;
   activeSubcategory?: string;
+  /** replaces the content of the Category tab (combos use this) */
+  categoryPanel?: React.ReactNode;
+  /** custom sort list (combos have no ratings) */
+  sortOptions?: readonly { value: SortValue; label: string }[];
+  /** one more checkbox filter shown as an extra tab (e.g. combo type) */
+  extraFilter?: {
+    label: string;
+    options: string[];
+    selected: string[];
+    onToggle: (value: string) => void;
+  };
 
   sort: SortValue;
   onSortChange: (sort: SortValue) => void;
@@ -30,7 +41,7 @@ interface ProductSidebarProps {
   onClose: () => void;
 }
 
-type Tab = "sort" | "size" | "price" | "category" | "color";
+type Tab = "sort" | "size" | "price" | "category" | "color" | "extra";
 
 /** Exact order: Sort By · Size · Price · Category · Color */
 const TABS: { id: Tab; label: string }[] = [
@@ -44,6 +55,9 @@ const TABS: { id: Tab; label: string }[] = [
 const ProductSidebar: React.FC<ProductSidebarProps> = ({
   categoryConfig,
   activeSubcategory,
+  categoryPanel,
+  sortOptions = SORT_OPTIONS,
+  extraFilter,
   sort,
   onSortChange,
   sizeOptions,
@@ -61,6 +75,9 @@ const ProductSidebar: React.FC<ProductSidebarProps> = ({
   onClose,
 }) => {
   const [tab, setTab] = useState<Tab>("sort");
+  const tabs = extraFilter
+    ? [...TABS, { id: "extra" as Tab, label: extraFilter.label }]
+    : TABS;
 
   const [minVal, maxVal] = priceRange;
   const span = Math.max(priceBounds.max - priceBounds.min, 1);
@@ -84,6 +101,7 @@ const ProductSidebar: React.FC<ProductSidebarProps> = ({
     price: minVal > priceBounds.min || maxVal < priceBounds.max,
     category: false,
     color: selectedColors.length > 0,
+    extra: (extraFilter?.selected.length ?? 0) > 0,
   };
 
   return (
@@ -129,7 +147,7 @@ const ProductSidebar: React.FC<ProductSidebarProps> = ({
         <div className="product-sidebar__body">
           {/* ---------- left: filter names ---------- */}
           <div className="product-sidebar__tabs" role="tablist">
-            {TABS.map((t) => (
+            {tabs.map((t) => (
               <button
                 key={t.id}
                 type="button"
@@ -152,7 +170,7 @@ const ProductSidebar: React.FC<ProductSidebarProps> = ({
           <div className="product-sidebar__panel" role="tabpanel">
             {tab === "sort" && (
               <ul className="product-sidebar__list">
-                {SORT_OPTIONS.map((opt) => (
+                {sortOptions.map((opt) => (
                   <li key={opt.value}>
                     <label className="product-sidebar__check">
                       <input
@@ -216,7 +234,26 @@ const ProductSidebar: React.FC<ProductSidebarProps> = ({
               </div>
             )}
 
-            {tab === "category" && (
+            {tab === "extra" && extraFilter && (
+              <ul className="product-sidebar__list">
+                {extraFilter.options.map((opt) => (
+                  <li key={opt}>
+                    <label className="product-sidebar__check">
+                      <input
+                        type="checkbox"
+                        checked={extraFilter.selected.includes(opt)}
+                        onChange={() => extraFilter.onToggle(opt)}
+                      />
+                      <span>{opt}</span>
+                    </label>
+                  </li>
+                ))}
+              </ul>
+            )}
+
+            {tab === "category" && categoryPanel}
+
+            {tab === "category" && !categoryPanel && categoryConfig && (
               <ul className="product-sidebar__list">
                 <li>
                   <Link
